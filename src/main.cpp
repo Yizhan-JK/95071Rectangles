@@ -20,6 +20,7 @@ void on_center_button() {}
  */
 void initialize() {
 	lift_task.suspend();
+	header_file_task.suspend();
 
 	pros::lcd::initialize();
 
@@ -29,6 +30,9 @@ void initialize() {
 	pros::lcd::set_text(1, "=^owo^=");
 
 	pros::lcd::print(3, "lift task: %d", lift_task.get_state());
+	pros::lcd::print(6, "header file task: %d", header_file_task.get_state());
+
+	start = pros::Clock::now();
 
 	while (true){
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) break;
@@ -79,9 +83,18 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
 void opcontrol() {
 
 	lift_task.resume();
+	header_file_task.resume();
+
+	pros::Task main_file_task([&](){
+		while (true){
+			pros::lcd::print(8, "hi im main file task! meow");
+			pros::delay(25);
+		}
+	}, "main file task");
 
 	while (true) {
 		
@@ -89,6 +102,11 @@ void opcontrol() {
 
 		pros::lcd::print(3, "lift task: %d", lift_task.get_state());
 		pros::lcd::print(4, "lift mode: %d, lift target: %d", liftMode, liftTarget);
+
+		pros::lcd::print(6, "header file task: %d", header_file_task.get_state());
+		pros::lcd::print(7, "main file task: %d", main_file_task.get_state());
+
+		pros::lcd::print(10, "current task: %s", pros::Task::current().get_name());
 
 		pros::delay(10);
 	}
