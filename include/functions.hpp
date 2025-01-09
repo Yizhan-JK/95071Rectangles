@@ -67,18 +67,19 @@ int colorMode = 1;
 
 void colorModeSwitch(){
     if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
-        pros::delay(70);
+        pros::delay(300);
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
             colorSense = !colorSense;
             colorPiston.retract();
+            master.rumble(".");
         }
     }
 }
 
 void liftModeSwitch(){
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-        pros::delay(500);
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+        pros::delay(400);
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
             liftAuto = !liftAuto;
             master.rumble("-");
         }

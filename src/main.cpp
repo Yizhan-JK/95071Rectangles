@@ -20,18 +20,25 @@ void on_center_button() {}
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	// master.clear();
+	master.clear();
 
-	// lift_task.suspend();
-	// print_task.suspend();
-	// color_task.suspend();
+	lift_task.suspend();
+	color_task.suspend();
+	// print_temp_task.suspend();
+	// print_pos_task.suspend();
+	// print_lift_task.suspend();
+	// print_color_task.suspend();
 
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
 	IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
 	LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	LiftRotation.set_position(0);
+
+	OpticalSensor.set_led_pwm(50);
+
+	colorPiston.retract();
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "=^owo^=");
@@ -42,8 +49,9 @@ void initialize() {
 
 	autonSelect();
 
-	// print_task.resume();
-	// color_task.resume();
+	color_task.resume();
+	// print_pos_task.resume();
+	// print_color_task.resume();
 }
 
 /**
@@ -145,19 +153,19 @@ void autonomous() {
  */
 
 void opcontrol() {
+	// print_pos_task.suspend();
 
-	// lift_task.resume();
-
-	// pros::Task print_task(printTask, "print task");
-	// pros::Task color_task(colorTask, "color task");
+	lift_task.resume();
+	
+	// print_temp_task.resume();
+	// print_lift_task.resume();
 
 	while (true) {
 		
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-			pros::delay(1000);
+			pros::delay(100);
 			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-				// lift_task.suspend();
-				autonSelect();
+				lift_task.suspend();
 				autonomous();
 			}
 		}
@@ -169,7 +177,7 @@ void opcontrol() {
 		liftManuel();
 		colorModeSwitch();
 		liftModeSwitch();
-		
+
 		pros::delay(10);
 	}
 }

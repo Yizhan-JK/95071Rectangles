@@ -54,7 +54,7 @@ pros::Optical OpticalSensor(OPTICAL_PORT);
 
 pros::adi::Pneumatics ClampPiston(CLAMP_PORT, false);
 pros::adi::Pneumatics DoinkerPiston(DOINKER_PORT, false);
-pros::adi::Pneumatics colorPiston(COLOR_PORT, true);
+pros::adi::Pneumatics colorPiston(COLOR_PORT, false);
 
 /*
 
