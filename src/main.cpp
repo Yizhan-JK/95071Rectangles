@@ -3,6 +3,7 @@
 #include "functions.hpp"
 #include "tasks.hpp"
 #include "autonomous.hpp"
+#include "chassis_setup.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -19,24 +20,30 @@ void on_center_button() {}
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	lift_task.suspend();
-	header_file_task.suspend();
+	// master.clear();
+
+	// lift_task.suspend();
+	// print_task.suspend();
+	// color_task.suspend();
+
+	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+
+	IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+	LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	LiftRotation.set_position(0);
 
 	pros::lcd::initialize();
-
-	LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	LiftRotation.reset();
-	
 	pros::lcd::set_text(1, "=^owo^=");
 
-	pros::lcd::print(3, "lift task: %d", lift_task.get_state());
-	pros::lcd::print(6, "header file task: %d", header_file_task.get_state());
+	master.clear();
 
-	start = pros::Clock::now();
+	Chassis.calibrate();
 
-	while (true){
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) break;
-	}
+	autonSelect();
+
+	// print_task.resume();
+	// color_task.resume();
 }
 
 /**
@@ -68,7 +75,60 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+
+
+void autonomous() {
+	switch (autonSelected) {
+		
+		case 0:
+		testAuton();
+		break;
+
+		case 1:
+		noAuton();
+		break;
+
+		case 2:
+		colorMode = 1;
+		colorSense = true;
+		redPositive();
+		break;
+
+		case 3:
+		colorMode = 1;
+		colorSense = true;
+		redNegative();
+		break;
+
+		case 4:
+		colorMode = 1;
+		colorSense = true;
+		redAWP();
+		break;
+
+		case 5:
+		colorMode = 2;
+		colorSense = true;
+		bluePositive();
+		break;
+
+		case 6:
+		colorMode = 2;
+		colorSense = true;
+		blueNegative();
+		break;
+
+		case 7:
+		colorMode = 2;
+		colorSense = true;
+		blueAWP();
+		break;
+
+		case 8:
+		autonSkills();
+		break; 
+	}
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -86,28 +146,30 @@ void autonomous() {}
 
 void opcontrol() {
 
-	lift_task.resume();
-	header_file_task.resume();
+	// lift_task.resume();
 
-	pros::Task main_file_task([&](){
-		while (true){
-			pros::lcd::print(8, "hi im main file task! meow");
-			pros::delay(25);
-		}
-	}, "main file task");
+	// pros::Task print_task(printTask, "print task");
+	// pros::Task color_task(colorTask, "color task");
 
 	while (true) {
 		
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+			pros::delay(1000);
+			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+				// lift_task.suspend();
+				autonSelect();
+				autonomous();
+			}
+		}
+
+		moveDT();
+		moveIntake();
 		moveLift();
-
-		pros::lcd::print(3, "lift task: %d", lift_task.get_state());
-		pros::lcd::print(4, "lift mode: %d, lift target: %d", liftMode, liftTarget);
-
-		pros::lcd::print(6, "header file task: %d", header_file_task.get_state());
-		pros::lcd::print(7, "main file task: %d", main_file_task.get_state());
-
-		pros::lcd::print(10, "current task: %s", pros::Task::current().get_name());
-
+		togglePneumatics();
+		liftManuel();
+		colorModeSwitch();
+		liftModeSwitch();
+		
 		pros::delay(10);
 	}
 }
