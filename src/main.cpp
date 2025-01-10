@@ -24,10 +24,8 @@ void initialize() {
 
 	lift_task.suspend();
 	color_task.suspend();
-	// print_temp_task.suspend();
-	// print_pos_task.suspend();
-	// print_lift_task.suspend();
-	// print_color_task.suspend();
+	print_task_auton.suspend();
+	print_task_drive.suspend();
 
 	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
@@ -38,7 +36,7 @@ void initialize() {
 
 	OpticalSensor.set_led_pwm(50);
 
-	colorPiston.retract();
+	colorPiston.extend();
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "=^owo^=");
@@ -50,8 +48,7 @@ void initialize() {
 	autonSelect();
 
 	color_task.resume();
-	// print_pos_task.resume();
-	// print_color_task.resume();
+	print_task_auton.resume();
 }
 
 /**
@@ -133,6 +130,8 @@ void autonomous() {
 		break;
 
 		case 8:
+		colorMode = 1;
+		colorSense = true;
 		autonSkills();
 		break; 
 	}
@@ -153,12 +152,10 @@ void autonomous() {
  */
 
 void opcontrol() {
-	// print_pos_task.suspend();
+	print_task_auton.suspend();
 
 	lift_task.resume();
-	
-	// print_temp_task.resume();
-	// print_lift_task.resume();
+	print_task_drive.resume();
 
 	while (true) {
 		

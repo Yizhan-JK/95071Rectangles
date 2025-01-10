@@ -27,56 +27,81 @@ void liftTask(){
 int tempMax = 0;
 std::vector<std::string> motorNames{"FL", "ML", "BL", "FR", "MR", "BR", "INT", "LFT"}; 
 
-// void printTemp(){
-//     while (true){
-    
-//         std::vector<double> motorTemps{};
+void printTemp(){
+        std::vector<double> motorTemps{};
 
-//         motorTemps.push_back(LeftDT.get_temperature(0));
-//         motorTemps.push_back(LeftDT.get_temperature(1));
-//         motorTemps.push_back(LeftDT.get_temperature(2));
-//         motorTemps.push_back(RightDT.get_temperature(0));
-//         motorTemps.push_back(RightDT.get_temperature(1));
-//         motorTemps.push_back(RightDT.get_temperature(2));
-//         motorTemps.push_back(IntakeMotor.get_temperature());
-//         motorTemps.push_back(LiftMotor.get_temperature());
+        motorTemps.push_back(LeftDT.get_temperature(0));
+        motorTemps.push_back(LeftDT.get_temperature(1));
+        motorTemps.push_back(LeftDT.get_temperature(2));
+        motorTemps.push_back(RightDT.get_temperature(0));
+        motorTemps.push_back(RightDT.get_temperature(1));
+        motorTemps.push_back(RightDT.get_temperature(2));
+        motorTemps.push_back(IntakeMotor.get_temperature());
+        motorTemps.push_back(LiftMotor.get_temperature());
 
-//         for(int i = 0; i < motorTemps.size(); i++)
-//             if(motorTemps[i] > motorTemps[tempMax]) tempMax = i;
+        for(int i = 0; i < motorTemps.size(); i++)
+            if(motorTemps[i] > motorTemps[tempMax]) tempMax = i;
 
-//         master.print(0, 0, "max temp: %.1f, %s", motorTemps[tempMax], motorNames[tempMax].c_str());
+        master.print(0, 0, "max temp: %.1f, %s", motorTemps[tempMax], motorNames[tempMax]);
 
-//         pros::delay(55);
+}
 
-//     }
-// }
+void printPos(){
+    master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
+}
 
-// void printPos(){
-//     while (true){
-    
-//         master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
+void printLift(){
+    master.print(2, 0, "lift auto: %s", liftAuto ? "on" : "off");
+}
 
-//         pros::delay(55);
+void printColor(){
+    master.print(1, 0, "color sense: %s, %s", colorSense ? "on" : "off", colorMode == 1 ? "red" : "blue");
+}
 
-//     }
-// }
 
-// void printLift(){
-//     while (true){
-    
-//         master.print(3, 0, "lift auto: %s", liftAuto ? "on" : "off");
 
-//         pros::delay(55);
-//     }
-// }
+void printAuton(){
+    int printCount = 0;
+    while (true){
 
-// void printColor(){
-//     while (true){
-//     master.print(2, 0, "color sense: %s, %s", colorSense ? "on" : "off", colorMode == 1 ? "red" : "blue");
+        switch(printCount){
+            case 0:
+                printTemp();
+                break;
+            case 1:
+                printPos();
+                break;
+        }
 
-//     pros::delay(55);
-//     }
-// }
+        pros::delay(150);
+        
+        printCount = (printCount + 1) % 2;
+    }
+}
+
+
+
+void printDrive(){
+    int printCountDrive = 0;
+    while (true){
+        switch (printCountDrive){
+            case 0:
+                printTemp();
+                break;
+            case 1:
+                // printColor();
+                printPos();
+                break;
+            case 2:
+                printLift();
+                break;
+        }
+
+        pros::delay(100);
+
+        printCountDrive = (printCountDrive + 1) % 3;
+    }
+}
 
 void colorTask(){
     while (true) {
@@ -84,20 +109,21 @@ void colorTask(){
             int proximity = OpticalSensor.get_proximity();
             double hue = OpticalSensor.get_hue();
             
-            if (colorMode == 1 && proximity > 250 && hue < 14){
-                pros::delay(20);
-                colorPiston.extend(); //reverse
-                pros::delay(500);
+            if (colorMode == 1 && (proximity > 250 && hue > 185)){
+                pros::delay(50);
+                colorPiston.retract(); //reverse
+                pros::delay(800);
 
             }else if (colorMode == 1){
-                colorPiston.retract();
-
-            }else if (colorMode == 2 && proximity > 250 && hue > 185){
-                pros::delay(150);
                 colorPiston.extend();
 
+            }else if (colorMode == 2 && (proximity > 250 && hue < 14)){
+                pros::delay(50);
+                colorPiston.retract(); 
+                pros::delay(800);
+
             }else if (colorMode == 2){
-                colorPiston.retract();
+                colorPiston.extend();
             }
         }
         pros::delay(10);
@@ -106,9 +132,8 @@ void colorTask(){
 
 pros::Task lift_task(liftTask, "lift task");
 pros::Task color_task(colorTask, "color task");
-// pros::Task print_temp_task(printTemp, "temp task");
-// pros::Task print_pos_task(printPos, "pos task");
-// pros::Task print_lift_task(printLift, "lift task");
-// pros::Task print_color_task(printColor, "color task");
+
+pros::Task print_task_auton(printAuton, "auton task");
+pros::Task print_task_drive(printDrive, "drive task");
 
 #endif

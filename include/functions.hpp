@@ -18,8 +18,8 @@ const double intakeVelocity = 450;
 
 void moveIntake(){
 
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1) IntakeMotor.move_velocity(intakeVelocity);
-    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1) IntakeMotor.move_velocity(-intakeVelocity);
+    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) IntakeMotor.move_velocity(intakeVelocity);
+    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) IntakeMotor.move_velocity(-intakeVelocity);
     else IntakeMotor.move_velocity(0);
 
 }
@@ -70,7 +70,7 @@ void colorModeSwitch(){
         pros::delay(300);
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
             colorSense = !colorSense;
-            colorPiston.retract();
+            colorPiston.extend();
             master.rumble(".");
         }
     }
@@ -113,6 +113,17 @@ void autonSelect(){
        }
 
        pros::delay(10);
+    }
+}
+
+void autonLift(){
+    int position = LiftRotation.get_position();
+
+    while (fabs(liftTarget - position) < 150){
+        position = LiftRotation.get_position();
+
+        LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/140 + 20)), 100), -100));
+        pros::delay(10);
     }
 }
 
