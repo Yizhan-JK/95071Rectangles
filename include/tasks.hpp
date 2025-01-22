@@ -12,10 +12,10 @@ void liftTask(){
         int position = LiftRotation.get_position();
 
         if ((liftTarget - position) > 150)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/140 + 20)), 100), -100));
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/140 + 20)), 200), -200));
 
         else if ((liftTarget - position) < 150)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/160)), 100), -100));
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/160)), 200), -200));
 
         else LiftMotor.move_velocity(0);
         }
@@ -36,25 +36,31 @@ void printTemp(){
         motorTemps.push_back(RightDT.get_temperature(0));
         motorTemps.push_back(RightDT.get_temperature(1));
         motorTemps.push_back(RightDT.get_temperature(2));
-        motorTemps.push_back(IntakeMotor.get_temperature());
+        motorTemps.push_back(IntakeFMotor.get_temperature());
         motorTemps.push_back(LiftMotor.get_temperature());
 
         for(int i = 0; i < motorTemps.size(); i++)
             if(motorTemps[i] > motorTemps[tempMax]) tempMax = i;
 
+        master.clear_line(0);
+
+        std::string s = motorNames[tempMax];
         master.print(0, 0, "max temp: %.1f, %s", motorTemps[tempMax], motorNames[tempMax]);
 
 }
 
 void printPos(){
+    master.clear_line(1);
     master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
 }
 
 void printLift(){
+    master.clear_line(2);
     master.print(2, 0, "lift auto: %s", liftAuto ? "on" : "off");
 }
 
 void printColor(){
+    master.clear_line(1);
     master.print(1, 0, "color sense: %s, %s", colorSense ? "on" : "off", colorMode == 1 ? "red" : "blue");
 }
 
@@ -89,8 +95,8 @@ void printDrive(){
                 printTemp();
                 break;
             case 1:
-                // printColor();
-                printPos();
+                printColor();
+                // printPos();
                 break;
             case 2:
                 printLift();

@@ -18,9 +18,17 @@ const double intakeVelocity = 450;
 
 void moveIntake(){
 
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) IntakeMotor.move_velocity(intakeVelocity);
-    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) IntakeMotor.move_velocity(-intakeVelocity);
-    else IntakeMotor.move_velocity(0);
+    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+        IntakeBMotor.move_velocity(intakeVelocity);
+        IntakeFMotor.move_velocity(200);
+    }
+    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+        IntakeBMotor.move_velocity(-intakeVelocity);
+        IntakeFMotor.move_velocity(-200);
+    }
+    else {IntakeBMotor.move_velocity(0);
+      IntakeFMotor.move_velocity(0);
+    };
 
 }
 
@@ -57,7 +65,7 @@ void moveLift(){
 void liftManuel(){
     if (!liftAuto){
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) LiftMotor.move(70);
-        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) LiftMotor.move(-50);
+        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) LiftMotor.move(-70);
         else LiftMotor.move(0);
     }
 }

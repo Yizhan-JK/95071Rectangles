@@ -29,9 +29,10 @@ void initialize() {
 
 	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
-	IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	IntakeFMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	IntakeBMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
-	LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	LiftRotation.set_position(0);
 
 	OpticalSensor.set_led_pwm(50);

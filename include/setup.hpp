@@ -11,7 +11,8 @@ const int FR_PORT = 16;
 const int MR_PORT = 15;
 const int BR_PORT = 14;
 
-const int INT_PORT = 18;
+const int INTB_PORT = 1;
+const int INTF_PORT = -8;
 
 const int LIFT_PORT = -20;
 const int LIFTROT_PORT = -2;
@@ -43,11 +44,14 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::MotorGroup LeftDT({FL_PORT, ML_PORT, BL_PORT}, pros::v5::MotorGears::blue);
 pros::MotorGroup RightDT({FR_PORT, MR_PORT, BR_PORT}, pros::v5::MotorGears::blue);
 
-pros::Motor IntakeMotor(INT_PORT, pros::v5::MotorGears::blue);
+pros::Motor IntakeFMotor(INTF_PORT, pros::v5::MotorGears::green);
+
+pros::Motor IntakeBMotor(INTB_PORT, pros::v5::MotorGears::blue);
 
 int liftTarget;
 
-pros::Motor LiftMotor(LIFT_PORT, pros::v5::MotorGears::red);
+pros::Motor LiftMotor(LIFT_PORT, pros::v5::MotorGears::green);  
+
 pros::Rotation LiftRotation(LIFTROT_PORT);
 
 pros::Optical OpticalSensor(OPTICAL_PORT);
