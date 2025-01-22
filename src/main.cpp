@@ -3,7 +3,6 @@
 #include "functions.hpp"
 #include "tasks.hpp"
 #include "autonomous.hpp"
-#include "chassis_setup.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -27,8 +26,6 @@ void initialize() {
 	print_task_auton.suspend();
 	print_task_drive.suspend();
 
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-
 	IntakeFMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	IntakeBMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
@@ -43,8 +40,6 @@ void initialize() {
 	pros::lcd::set_text(1, "=^owo^=");
 
 	master.clear();
-
-	Chassis.calibrate();
 
 	autonSelect();
 

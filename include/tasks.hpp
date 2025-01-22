@@ -51,7 +51,7 @@ void printTemp(){
 
 void printPos(){
     master.clear_line(1);
-    master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
+    // master.print();
 }
 
 void printLift(){

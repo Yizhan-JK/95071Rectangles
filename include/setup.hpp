@@ -2,7 +2,6 @@
 #define SETUP_HPP
 
 #include "main.h"
-#include "lemlib/api.hpp"
 
 const int FL_PORT = -11;
 const int ML_PORT = -12;
@@ -60,29 +59,8 @@ pros::adi::Pneumatics ClampPiston(CLAMP_PORT, true);
 pros::adi::Pneumatics DoinkerPiston(DOINKER_PORT, false);
 pros::adi::Pneumatics colorPiston(COLOR_PORT, false);
 
-/*
-
-LEMLIB
-
-*/
-
 pros::Imu Imu(IMU_PORT);
 pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
 
-const float DT_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
-const float TRACKING_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_2;
-
-const float DT_RPM = 450;
-const float DT_DRIFT = 8;
-
-lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
-lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
-
-//tracking gear ratio = 1
-lemlib::TrackingWheel HorizontalTracking(&HorizontalRotation, TRACKING_WHEEL_DIAMETER, HORIZ_ODOM_OFFSET, 1);
-
-lemlib::Drivetrain Drivetrain(&LeftDT, &RightDT, TRACK_WIDTH, DT_WHEEL_DIAMETER, DT_RPM, DT_DRIFT);
-
-lemlib::OdomSensors DTsensors(&LeftDTtracking, &RightDTtracking, &HorizontalTracking, nullptr, &Imu);
 
 #endif
