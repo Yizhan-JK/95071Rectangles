@@ -12,10 +12,10 @@ void liftTask(){
         int position = LiftRotation.get_position();
 
         if ((liftTarget - position) > 150)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/140 + 20)), 200), -200));
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/80)), 200), -200));
 
         else if ((liftTarget - position) < 150)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/160)), 200), -200));
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/50)), 200), -200));
 
         else LiftMotor.move_velocity(0);
         }

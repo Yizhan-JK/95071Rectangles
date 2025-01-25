@@ -4,20 +4,20 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
-const int FL_PORT = -11;
-const int ML_PORT = -12;
-const int BL_PORT = -13;
+const int FL_PORT = -19;
+const int ML_PORT = -18;
+const int BL_PORT = -17;
 const int FR_PORT = 16;
 const int MR_PORT = 15;
 const int BR_PORT = 14;
 
-const int INTB_PORT = 1;
-const int INTF_PORT = -8;
+const int INTB_PORT = 9;
+const int INTF_PORT = -10;
 
-const int LIFT_PORT = -20;
-const int LIFTROT_PORT = -2;
+const int LIFT_PORT = 7;
+const int LIFTROT_PORT = 5;
 
-const int OPTICAL_PORT = 19;
+const int OPTICAL_PORT = 8;
 
 const char CLAMP_PORT = 'C';
 const char DOINKER_PORT = 'D';
@@ -26,7 +26,7 @@ const char COLOR_PORT = 'B';
 const int IMU_PORT = 1;
 
 // const int VERT_ODOM_PORT;
-const int HORIZ_ODOM_PORT = 17;
+//const int HORIZ_ODOM_PORT = 17;
 
 
 /*measurementss*/
@@ -67,7 +67,7 @@ LEMLIB
 */
 
 pros::Imu Imu(IMU_PORT);
-pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
+// pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
 
 const float DT_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
 const float TRACKING_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_2;
@@ -79,10 +79,10 @@ lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET,
 lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
 
 //tracking gear ratio = 1
-lemlib::TrackingWheel HorizontalTracking(&HorizontalRotation, TRACKING_WHEEL_DIAMETER, HORIZ_ODOM_OFFSET, 1);
+//lemlib::TrackingWheel HorizontalTracking(&HorizontalRotation, TRACKING_WHEEL_DIAMETER, HORIZ_ODOM_OFFSET, 1);
 
 lemlib::Drivetrain Drivetrain(&LeftDT, &RightDT, TRACK_WIDTH, DT_WHEEL_DIAMETER, DT_RPM, DT_DRIFT);
 
-lemlib::OdomSensors DTsensors(&LeftDTtracking, &RightDTtracking, &HorizontalTracking, nullptr, &Imu);
+lemlib::OdomSensors DTsensors(&LeftDTtracking, &RightDTtracking, nullptr/*&HorizontalTracking*/, nullptr, &Imu);
 
 #endif
