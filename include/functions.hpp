@@ -14,7 +14,7 @@ void moveDT(){
     //chassis.curvature(power, turn, false);
 }
 
-const double intakeVelocity = 450; 
+const double intakeVelocity = 475; 
 
 void moveIntake(){
 
@@ -52,7 +52,7 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 3600;
+            liftTarget = 2500;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
@@ -124,15 +124,68 @@ void autonSelect(){
     }
 }
 
-void autonLift(){
-    int position = LiftRotation.get_position();
 
-    while (fabs(liftTarget - position) < 150){
-        position = LiftRotation.get_position();
+// void autonLift(double target){
+//     double position = LiftRotation.get_position();
 
-        LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/140 + 20)), 100), -100));
-        pros::delay(10);
+//     while (fabs(target - position) < 150){
+//         position = LiftRotation.get_position();
+
+//         LiftMotor.move_velocity(fmax(fmin((((target - position)/150)), 100), -100));
+//         pros::delay(10);
+//     }
+// }
+
+void autoIntake(double intakeVelocity){
+    if(intakeVelocity > 0){
+        IntakeFMotor.move_velocity(200);
+    } else if(intakeVelocity < 0){
+        IntakeFMotor.move_velocity(-200);
+    } else{
+        IntakeFMotor.move_velocity(0);
     }
+    IntakeBMotor.move_velocity(intakeVelocity);
+}
+
+void autoClamp(bool out){
+    if(out){
+        ClampPiston.retract();
+    } else{
+        ClampPiston.extend();
+    }
+}
+
+void autoArm(bool out){
+    if(out){
+        DoinkerPiston.extend();
+    } else{
+        DoinkerPiston.retract();
+    }
+}
+
+const double wheelCircumference = 3.25 * 3.14159265358979;
+
+//inches to ticks
+double dToT(double inches){
+  double ticks = inches;
+  ticks /= wheelCircumference;
+  ticks *= 360;
+  return ticks;
+}
+
+const double deg = 3;
+
+void moveBot(double dist, double vel){
+    double ticks = dToT(dist);
+
+    LeftDT.move_relative(ticks, vel);
+    RightDT.move_relative(ticks, vel);
+}
+
+void turnBot(double dist, double vel){
+
+    LeftDT.move_relative(dist * deg, vel);
+    RightDT.move_relative(-dist * deg, vel);
 }
 
 #endif

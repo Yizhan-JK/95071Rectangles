@@ -7,15 +7,14 @@
 void liftTask(){
     
     while (true){
-
         if (liftAuto){
         int position = LiftRotation.get_position();
 
-        if ((liftTarget - position) > 150)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/80)), 200), -200));
+        if ((liftTarget - position) > 200)
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/30)), 200), -200));
 
-        else if ((liftTarget - position) < 150)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/50)), 200), -200));
+        else if ((liftTarget - position) < -200)
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/10)), 200), -200));
 
         else LiftMotor.move_velocity(0);
         }
@@ -49,10 +48,10 @@ void printTemp(){
 
 }
 
-void printPos(){
-    master.clear_line(1);
-    master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
-}
+// void printPos(){
+//     master.clear_line(1);
+//     master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
+// }
 
 void printLift(){
     master.clear_line(2);
@@ -75,7 +74,7 @@ void printAuton(){
                 printTemp();
                 break;
             case 1:
-                printPos();
+                // printPos();
                 break;
         }
 
@@ -118,7 +117,7 @@ void colorTask(){
             if (colorMode == 1 && (proximity > 250 && hue > 185)){
                 pros::delay(50);
                 colorPiston.retract(); //reverse
-                pros::delay(800);
+                pros::delay(850);
 
             }else if (colorMode == 1){
                 colorPiston.extend();
@@ -126,7 +125,7 @@ void colorTask(){
             }else if (colorMode == 2 && (proximity > 250 && hue < 14)){
                 pros::delay(50);
                 colorPiston.retract(); 
-                pros::delay(800);
+                pros::delay(850);
 
             }else if (colorMode == 2){
                 colorPiston.extend();

@@ -27,7 +27,7 @@ void initialize() {
 	print_task_auton.suspend();
 	print_task_drive.suspend();
 
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
 
 	IntakeFMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	IntakeBMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -48,8 +48,10 @@ void initialize() {
 
 	autonSelect();
 
+	preAuton();
+
 	color_task.resume();
-	print_task_auton.resume();
+	// print_task_auton.resume();
 }
 
 /**
@@ -84,6 +86,8 @@ void competition_initialize() {}
 
 
 void autonomous() {
+
+	lift_task.resume();
 	switch (autonSelected) {
 		
 		case 0:
@@ -153,7 +157,7 @@ void autonomous() {
  */
 
 void opcontrol() {
-	print_task_auton.suspend();
+	//print_task_auton.suspend();
 
 	lift_task.resume();
 	print_task_drive.resume();
@@ -163,7 +167,7 @@ void opcontrol() {
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
 			pros::delay(100);
 			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-				lift_task.suspend();
+				//lift_task.suspend();
 				autonomous();
 			}
 		}
