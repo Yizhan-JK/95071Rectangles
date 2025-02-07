@@ -10,22 +10,38 @@
 #define CIRCUMFERENCE 2 * 2.125 * M_PI
 
 void liftTask(){
-    
-    while (true){
+
+      while (true){
         if (liftAuto){
         int position = LiftRotation.get_position();
 
-        if ((liftTarget - position) > 250)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/50) + 0.2 * sin(position/100 /RAD_DEG)), 200), -200));
+        if ((liftTarget - position) > 200)
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/30)), 200), -200));
 
-        else if ((liftTarget - position) < -250)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/30) + 0.2 * sin(position/100 /RAD_DEG)), 200), -200));
+        else if ((liftTarget - position) < -200)
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/10)), 200), -200));
 
         else LiftMotor.move_velocity(0);
         }
 
         pros::delay(10);
     }
+    
+    // while (true){
+    //     if (liftAuto){
+    //     int position = LiftRotation.get_position();
+
+    //     if ((liftTarget - position) > 250)
+    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/25 + 12)), 200), -200));
+
+    //     else if ((liftTarget - position) < -250)
+    //         LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/12 + 60), 200), -200));
+
+    //     else LiftMotor.move_velocity(0);
+    //     }
+
+    //     pros::delay(10);
+    // }
 }
 
 int tempMax = 0;

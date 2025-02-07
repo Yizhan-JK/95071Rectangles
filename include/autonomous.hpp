@@ -8,12 +8,28 @@
 void testAuton(){
     // double start = pros::millis();
 
-    Chassis.setPose(0, 0, 0);
 
-    Chassis.moveToPose(0, 30, 90, 4000, {.forwards = true}, true);
-    Chassis.waitUntilDone();
+    // Chassis.turnToHeading(270, 4000);
+    // pros::delay(500);
+    // Chassis.turnToHeading(180, 4000);
+    // pros::delay(500);
+    // Chassis.turnToHeading(0, 4000);
+    // pros::delay(500);
+    // Chassis.turnToHeading(41.5, 4000);
+    
+    // Chassis.moveToPoint(16.6, -14.5, 4000, {.forwards = false});
+    // Chassis.waitUntilDone();
+    // pros::delay(2000);
+    // // Chassis.turnToHeading(41.5, 4000);
+    // Chassis.moveToPoint(10, -10, 4000);
+    
 
-    master.rumble("-");
+    // Chassis.moveToPose(0, 50, 270, 4000, {.forwards = true, .minSpeed=50}, false);
+    // Chassis.waitUntil(10);
+    // autoIntake(-450);
+    // Chassis.waitUntil(40);
+    // autoIntake(0);
+    // Chassis.moveToPose(5, 50, 270, 4000);
 
     // print_task_auton.suspend();
     // master.print(2, 1, "Time: %.0f", (pros::millis() - start));
@@ -61,6 +77,8 @@ void redAWP(){}
 void bluePositive(){}
 
 void blueNegative(){
+    Chassis.moveToPose(11, 0.312, 41.3, 4000);
+    
     // movePID(8, 1000);
     // turnPID(0, 1000);
     // turnPID(0, 1000);
@@ -237,9 +255,7 @@ void preRedNeg(){
 }
 
 void preBlueNeg(){
-    turnPID(90, 2000);
-    movePID(-2.6, 800);
-    turnPID(90, 2000);
+    
 }
 
 void preAuton(){

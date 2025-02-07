@@ -10,8 +10,8 @@ void moveDT(){
     power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); 
 
-    Chassis.arcade(power, turn, false, 0.5);
-    //chassis.curvature(power, turn, false);
+    // Chassis.arcade(power, turn, false, 0.5);
+    Chassis.curvature(power, turn, false);
 }
 
 const double intakeVelocity = 450; 
