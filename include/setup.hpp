@@ -25,8 +25,8 @@ const char COLOR_PORT = 'B';
 
 const int IMU_PORT = 1;
 
-// const int VERT_ODOM_PORT;
-//const int HORIZ_ODOM_PORT = 17;
+const int VERT_ODOM_PORT = 11;
+const int HORIZ_ODOM_PORT = -13;
 
 
 /*measurementss*/
@@ -34,7 +34,8 @@ const int IMU_PORT = 1;
 const float TRACK_WIDTH = 11.875;
 const float LEFT_DT_OFFSET = -5.9375;
 const float RIGHT_DT_OFFSET = 5.9375;
-const float HORIZ_ODOM_OFFSET = 4.5000;
+const float HORIZ_ODOM_OFFSET = 3.9375;
+const float VERT_ODOM_OFFSET = -1.7800;
 
 /**************/
 
@@ -67,7 +68,8 @@ LEMLIB
 */
 
 pros::Imu Imu(IMU_PORT);
-// pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
+pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
+pros::Rotation VerticalRotation(VERT_ODOM_PORT);
 
 const float DT_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
 const float TRACKING_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_2;
@@ -75,14 +77,15 @@ const float TRACKING_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_2;
 const float DT_RPM = 450;
 const float DT_DRIFT = 8;
 
-lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
-lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
+// lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
+// lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
 
 //tracking gear ratio = 1
-//lemlib::TrackingWheel HorizontalTracking(&HorizontalRotation, TRACKING_WHEEL_DIAMETER, HORIZ_ODOM_OFFSET, 1);
+lemlib::TrackingWheel HorizontalTracking(&HorizontalRotation, TRACKING_WHEEL_DIAMETER, HORIZ_ODOM_OFFSET, 1);
+lemlib::TrackingWheel VerticalTracking(&VerticalRotation, TRACKING_WHEEL_DIAMETER, VERT_ODOM_OFFSET, 1);
 
 lemlib::Drivetrain Drivetrain(&LeftDT, &RightDT, TRACK_WIDTH, DT_WHEEL_DIAMETER, DT_RPM, DT_DRIFT);
 
-lemlib::OdomSensors DTsensors(&LeftDTtracking, &RightDTtracking, nullptr/*&HorizontalTracking*/, nullptr, &Imu);
+lemlib::OdomSensors DTsensors(&VerticalTracking, nullptr, &HorizontalTracking, nullptr, &Imu);
 
 #endif
