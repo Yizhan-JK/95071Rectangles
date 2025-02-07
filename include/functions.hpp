@@ -54,11 +54,11 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 3500;
+            liftTarget = 2700;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
-            liftTarget = 14000;
+            liftTarget = 15000;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
     }
