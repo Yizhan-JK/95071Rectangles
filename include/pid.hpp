@@ -14,7 +14,7 @@ double exitMEOW = 0.2;
 
 void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
-    double Kp = 0.4925, Ki = 0.0001, Kd = 0;
+    double Kp = 0.46, Ki = 0.0002, Kd = 1.345;
     double error = targetDegrees - Imu.get_heading();
     double integral = 0;
     double lastError = error;
@@ -32,13 +32,13 @@ void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
         if(integral > 300) integral = 300;
         if(integral < -300) integral = -300;
 
-        double out = (error*Kp + integral*Ki + (lastError-error)*Kd) *5;
+        double out = (error * Kp + integral * Ki + (lastError-error) * Kd) *5;
 
         if (fabs(out) > maxRPM) out = sign(out) * maxRPM;
         if (fabs(out) < minRPM) out = sign(out) * minRPM;
-        
+
         if (fabs(out) < exitMEOW) out = 0;
-        
+
         LeftDT.move_velocity(out);
         RightDT.move_velocity(-out);
 

@@ -72,10 +72,10 @@ pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
 pros::Rotation VerticalRotation(VERT_ODOM_PORT);
 
 const float DT_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
-const float TRACKING_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_2;
+const float TRACKING_WHEEL_DIAMETER = 2/*lemlib::Omniwheel::NEW_2*/;
 
 const float DT_RPM = 450;
-const float DT_DRIFT = 8;
+const float DT_DRIFT = 2;
 
 // lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
 // lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
