@@ -12,9 +12,46 @@ int sign (double in){
 
 double exitMEOW = 0.2;
 
+
+// void turnPID(double targetDegrees, int sec){
+//     double start = pros::millis();
+//     double Kp = 0.527, Ki = 0, Kd = 0;
+//     double error = targetDegrees - Imu.get_heading();
+//     double integral = 0;
+//     double lastError = error;
+//     double initialHeading = Imu.get_heading();
+
+//     while (fabs(error) > 1.7) {
+//         error = static_cast<int>(targetDegrees - Imu.get_heading() + 360) % 360;
+//         if(error >= 180){
+//             error -=  360;
+//         }
+//         integral += error;
+//         if(error == 0){
+//             integral = 0;
+//         }
+//         if(integral > 300) integral = 300;
+//         if(integral < -300) integral = -300;
+        
+//         LeftDT.move_velocity((error*Kp + integral*Ki + (lastError-error)*Kd) * 5);
+//         RightDT.move_velocity(-(error*Kp + integral*Ki + (lastError-error)*Kd) * 5);
+
+//         lastError = error;
+//         if((pros::millis() - start) > sec){
+//             break;
+//         }
+//         pros::delay(10);
+//     }
+
+//     LeftDT.move_velocity(0);
+//     RightDT.move_velocity(0);
+//     LeftDT.brake();
+//     RightDT.brake();
+// }
+
 void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
-    double Kp = 0.4925, Ki = 0.0001, Kd = 0;
+    double Kp = 0.46, Ki = 0.0002, Kd = 1.345;
     double error = targetDegrees - Imu.get_heading();
     double integral = 0;
     double lastError = error;
@@ -57,7 +94,18 @@ void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
 
 void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
-    double kP = 1.442225, kI = 0.000075, kD = 4.6;
+    double kP, kI, kD;
+    //sos
+    if(distance < 0){
+        kP = 0.91;
+        kI = 0.0001;
+        kD = 0;
+    } else{
+        kP = 0.9;
+        kI = 0.0001;
+        kD = 0;
+    }
+    
     
     LeftDT.tare_position_all();
     RightDT.tare_position_all();
@@ -119,6 +167,54 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     // LeftDT.brake();
     // RightDT.brake();
 }
+
+// void movePID(double distance, int sec){
+//     double start = pros::millis();
+//     double kP = 1.28, kI = 0.0001, kD = 0.2;
+//     // double kP = 0.93, kI = 0, kD = 0;
+    
+//     LeftDT.tare_position();
+//     RightDT.tare_position();
+
+//     int prevError = 0;
+//     int derivative;
+//     double integral = 0;
+//     double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
+//     double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
+//     double totalAvgPos = (avgLeftSide + avgRightSide)/2;
+
+//     int tVal = dToT(distance);
+
+//     int error = tVal - totalAvgPos;
+//     while(fabs(error) > 1.7){
+//         if((pros::millis() - start) > sec) break;
+//         integral += error;
+
+//         if(error == 0){
+//             integral = 0;
+//         }
+//         if(integral > 300) integral = 300;
+//         if(integral < -300) integral = -300;
+
+//         avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
+//         avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
+//         totalAvgPos = (avgLeftSide + avgRightSide)/2;
+
+//         error = tVal - totalAvgPos;
+//         derivative = error - prevError;
+//         double motorPower = (error * kP + derivative * kD + integral * kI);
+        
+//         LeftDT.move_velocity(motorPower);
+//         RightDT.move_velocity(motorPower);
+
+//         prevError = error;
+//         pros::delay(10);
+//     }
+//     LeftDT.move_velocity(0);
+//     RightDT.move_velocity(0);
+//     LeftDT.brake();
+//     RightDT.brake();
+// }
 
 // // void ignorethisplease(double distance, int sec){
 // //     double start = pros::millis();

@@ -34,7 +34,7 @@ void moveIntake(){
 
 void togglePneumatics(){
     if(master.get_digital_new_press(DIGITAL_A)) ClampPiston.toggle();
-    if(master.get_digital_new_press(DIGITAL_X)) DoinkerPiston.toggle();
+    if(master.get_digital_new_press(DIGITAL_DOWN)) DoinkerPiston.toggle();
 }
 
 bool liftAuto = true;
@@ -45,6 +45,9 @@ void moveLift(){
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2) && liftAuto)
         liftMode = (liftMode + 1) % 3;
 
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) && liftAuto)
+        liftMode = 1;
+
     switch(liftMode){
         
         case 0:
@@ -52,7 +55,7 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 2500;
+            liftTarget = 2550;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
@@ -170,7 +173,7 @@ double dToT(double inches){
   double ticks = inches;
   ticks /= wheelCircumference;
   ticks *= 360;
-  return ticks;
+  return ticks * 1.1;
 }
 
 const double deg = 3;

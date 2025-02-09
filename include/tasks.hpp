@@ -5,6 +5,36 @@
 #include "functions.hpp"
 
 void liftTask(){
+
+//     while (true){
+//         if (liftAuto){
+//         int position = LiftRotation.get_position();
+
+//         if ((liftTarget - position) > 1500){
+//             LiftMotor.move_velocity(200);
+//         }
+//         else if((liftTarget - position) > 500){
+//             LiftMotor.move_velocity(50);
+//         }
+//         else if((liftTarget - position) > 200){
+//             LiftMotor.move_velocity(20);
+//         }
+//         else if((liftTarget - position) < -1500){
+//             LiftMotor.move_velocity(-150);
+//         }
+//         else if((liftTarget - position) < -500){
+//             LiftMotor.move_velocity(-50);
+//         }
+//         else if((liftTarget - position) < -200){
+//             LiftMotor.move_velocity(-20);
+//         }
+//         else{
+//             LiftMotor.move_velocity(0);
+//         }
+
+//         pros::delay(10);
+//     }
+// }
     
     while (true){
         if (liftAuto){
@@ -115,17 +145,17 @@ void colorTask(){
             double hue = OpticalSensor.get_hue();
             
             if (colorMode == 1 && (proximity > 250 && hue > 185)){
-                pros::delay(50);
+                pros::delay(125);
                 colorPiston.retract(); //reverse
-                pros::delay(850);
+                pros::delay(800);
 
             }else if (colorMode == 1){
                 colorPiston.extend();
 
             }else if (colorMode == 2 && (proximity > 250 && hue < 14)){
-                pros::delay(50);
+                pros::delay(125);
                 colorPiston.retract(); 
-                pros::delay(850);
+                pros::delay(800);
 
             }else if (colorMode == 2){
                 colorPiston.extend();
@@ -138,7 +168,7 @@ void colorTask(){
 pros::Task lift_task(liftTask, "lift task");
 pros::Task color_task(colorTask, "color task");
 
-pros::Task print_task_auton(printAuton, "auton task");
-pros::Task print_task_drive(printDrive, "drive task");
+// pros::Task print_task_auton(printAuton, "auton task");
+// pros::Task print_task_drive(printDrive, "drive task");
 
 #endif
