@@ -4,39 +4,14 @@
 #include "setup.hpp"
 #include "functions.hpp"
 
+#include <math.h>
+
+#define RAD_DEG 180/M_PI
+#define CIRCUMFERENCE 2 * 2.125 * M_PI
+
 void liftTask(){
 
-//     while (true){
-//         if (liftAuto){
-//         int position = LiftRotation.get_position();
-
-//         if ((liftTarget - position) > 1500){
-//             LiftMotor.move_velocity(200);
-//         }
-//         else if((liftTarget - position) > 500){
-//             LiftMotor.move_velocity(50);
-//         }
-//         else if((liftTarget - position) > 200){
-//             LiftMotor.move_velocity(20);
-//         }
-//         else if((liftTarget - position) < -1500){
-//             LiftMotor.move_velocity(-150);
-//         }
-//         else if((liftTarget - position) < -500){
-//             LiftMotor.move_velocity(-50);
-//         }
-//         else if((liftTarget - position) < -200){
-//             LiftMotor.move_velocity(-20);
-//         }
-//         else{
-//             LiftMotor.move_velocity(0);
-//         }
-
-//         pros::delay(10);
-//     }
-// }
-    
-    while (true){
+      while (true){
         if (liftAuto){
         int position = LiftRotation.get_position();
 
@@ -51,6 +26,22 @@ void liftTask(){
 
         pros::delay(10);
     }
+    
+    // while (true){
+    //     if (liftAuto){
+    //     int position = LiftRotation.get_position();
+
+    //     if ((liftTarget - position) > 250)
+    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/25 + 12)), 200), -200));
+
+    //     else if ((liftTarget - position) < -250)
+    //         LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/12 + 60), 200), -200));
+
+    //     else LiftMotor.move_velocity(0);
+    //     }
+
+    //     pros::delay(10);
+    // }
 }
 
 int tempMax = 0;
@@ -78,10 +69,30 @@ void printTemp(){
 
 }
 
-// void printPos(){
-//     master.clear_line(1);
-//     master.print(1, 0, "X: %f, Y: %f, a: %f", Chassis.getPose().x, Chassis.getPose().y, Chassis.getPose().theta);
-// }
+void printPos0(){
+    master.clear_line(0);
+    master.print(0, 0, "X: %f", Chassis.getPose().x);
+}
+
+void printPos1(){
+    master.clear_line(1);
+    master.print(1, 0, "Y: %f", Chassis.getPose().y);
+}
+
+void printPos2(){
+    master.clear_line(2);
+    master.print(2, 0, "a: %f", Chassis.getPose().theta);
+}
+
+void printBrain(){
+    while(true){
+    pros::lcd::print(0, "X: %f", Chassis.getPose().x);
+    pros::lcd::print(1, "Y: %f", Chassis.getPose().y);
+    pros::lcd::print(2, "a: %f", Chassis.getPose().theta);
+
+    pros::delay(100);
+    }
+}
 
 void printLift(){
     master.clear_line(2);
@@ -101,42 +112,45 @@ void printAuton(){
 
         switch(printCount){
             case 0:
-                printTemp();
+                printPos0();
                 break;
             case 1:
-                // printPos();
+                printPos1();
+                break;
+            case 2:
+                printPos2();
                 break;
         }
 
         pros::delay(150);
         
-        printCount = (printCount + 1) % 2;
+        printCount = (printCount + 1) % 3;
     }
 }
 
 
 
-void printDrive(){
-    int printCountDrive = 0;
-    while (true){
-        switch (printCountDrive){
-            case 0:
-                printTemp();
-                break;
-            case 1:
-                printColor();
-                // printPos();
-                break;
-            case 2:
-                printLift();
-                break;
-        }
+// void printDrive(){
+//     int printCountDrive = 0;
+//     while (true){
+//         switch (printCountDrive){
+//             case 0:
+//                 printTemp();
+//                 break;
+//             case 1:
+//                 printColor();
+//                 // printPos();
+//                 break;
+//             case 2:
+//                 printLift();
+//                 break;
+//         }
 
-        pros::delay(100);
+//         pros::delay(100);
 
-        printCountDrive = (printCountDrive + 1) % 3;
-    }
-}
+//         printCountDrive = (printCountDrive + 1) % 3;
+//     }
+// }
 
 void colorTask(){
     while (true) {
@@ -168,7 +182,9 @@ void colorTask(){
 pros::Task lift_task(liftTask, "lift task");
 pros::Task color_task(colorTask, "color task");
 
-// pros::Task print_task_auton(printAuton, "auton task");
+pros::Task print_task_auton(printAuton, "auton task");
 // pros::Task print_task_drive(printDrive, "drive task");
+
+pros::Task print_task_brain(printBrain, "brain task");
 
 #endif

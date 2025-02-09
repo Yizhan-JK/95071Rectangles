@@ -24,7 +24,7 @@ void initialize() {
 
 	lift_task.suspend();
 	color_task.suspend();
-	// print_task_auton.suspend();
+	print_task_auton.suspend();
 	// print_task_drive.suspend();
 
 	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -45,13 +45,14 @@ void initialize() {
 	master.clear();
 
 	Chassis.calibrate();
+	Chassis.setPose(0, 0, 0);
 
 	autonSelect();
 
 	preAuton();
 
 	color_task.resume();
-	// print_task_auton.resume();
+	print_task_auton.resume();
 }
 
 /**
@@ -163,30 +164,17 @@ void opcontrol() {
 	lift_task.resume();
 	// print_task_drive.resume();
 
-	// autoClamp(false);
-    // liftTarget = 16500;
-    // delay(1000);
-    // movePID(-8, 800, 0, 200);
-    // liftTarget = 0;
-    // moveBot(-8, 90)
-    // delay(800);
-    // autoClamp(true);
-    // delay(300);
-
-	// Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-
 	while (true) {
+		Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 		
-		// if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-		// 	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
-		// 	pros::delay(100);
-		// 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-		// 		Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
-		// 		//lift_task.suspend();
-		// 		autonomous();
-		// 	}
-		// }
-		//Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+			pros::delay(100);
+			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+				//lift_task.suspend();
+				autonomous();
+			}
+		}
+
 		moveDT();
 		moveIntake();
 		moveLift();

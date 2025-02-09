@@ -69,13 +69,13 @@ void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
         if(integral > 300) integral = 300;
         if(integral < -300) integral = -300;
 
-        double out = (error*Kp + integral*Ki + (lastError-error)*Kd) *5;
+        double out = (error * Kp + integral * Ki + (lastError-error) * Kd) *5;
 
         if (fabs(out) > maxRPM) out = sign(out) * maxRPM;
         if (fabs(out) < minRPM) out = sign(out) * minRPM;
-        
+
         if (fabs(out) < exitMEOW) out = 0;
-        
+
         LeftDT.move_velocity(out);
         RightDT.move_velocity(-out);
 

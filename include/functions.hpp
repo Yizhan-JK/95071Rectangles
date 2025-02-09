@@ -10,11 +10,11 @@ void moveDT(){
     power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); 
 
-    Chassis.arcade(power, turn, false, 0.5);
-    //chassis.curvature(power, turn, false);
+    // Chassis.arcade(power, turn, false, 0.5);
+    Chassis.curvature(power, turn, false);
 }
 
-const double intakeVelocity = 475; 
+const double intakeVelocity = 450; 
 
 void moveIntake(){
 
@@ -44,8 +44,7 @@ void moveLift(){
     
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2) && liftAuto)
         liftMode = (liftMode + 1) % 3;
-
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) && liftAuto)
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) && liftAuto)
         liftMode = 1;
 
     switch(liftMode){
@@ -55,7 +54,7 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 2550;
+            liftTarget = 2700;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
@@ -67,8 +66,8 @@ void moveLift(){
 
 void liftManuel(){
     if (!liftAuto){
-        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) LiftMotor.move(70);
-        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) LiftMotor.move(-70);
+        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) LiftMotor.move(70);
+        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) LiftMotor.move(-70);
         else LiftMotor.move(0);
     }
 }
@@ -88,9 +87,9 @@ void colorModeSwitch(){
 }
 
 void liftModeSwitch(){
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         pros::delay(400);
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
             liftAuto = !liftAuto;
             master.rumble("-");
         }
@@ -124,6 +123,17 @@ void autonSelect(){
        }
 
        pros::delay(10);
+    }
+}
+
+void autonLift(){
+    int position = LiftRotation.get_position();
+
+    while (fabs(liftTarget - position) < 150){
+        position = LiftRotation.get_position();
+
+        LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/140 + 20)), 100), -100));
+        pros::delay(10);
     }
 }
 
