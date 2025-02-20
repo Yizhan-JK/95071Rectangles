@@ -11,37 +11,39 @@
 
 void liftTask(){
 
-      while (true){
+    while (true){
         if (liftAuto){
         int position = LiftRotation.get_position();
 
-        if ((liftTarget - position) > 200)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/30)), 200), -200));
+        if ((liftTarget - position) > 250)
+            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/32)), 200), -200));
 
-        else if ((liftTarget - position) < -200)
-            LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/10)), 200), -200));
+        else if ((liftTarget - position) < -250)
+            LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/20), 200), -200));
 
         else LiftMotor.move_velocity(0);
         }
 
         pros::delay(10);
     }
-    
-    // while (true){
+
+
+    //   while (true){
     //     if (liftAuto){
     //     int position = LiftRotation.get_position();
 
-    //     if ((liftTarget - position) > 250)
-    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/25 + 12)), 200), -200));
+    //     if ((liftTarget - position) > 200)
+    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/30)), 200), -200));
 
-    //     else if ((liftTarget - position) < -250)
-    //         LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/12 + 60), 200), -200));
+    //     else if ((liftTarget - position) < -200)
+    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/10)), 200), -200));
 
     //     else LiftMotor.move_velocity(0);
     //     }
 
     //     pros::delay(10);
     // }
+    
 }
 
 int tempMax = 0;
@@ -106,27 +108,27 @@ void printColor(){
 
 
 
-void printAuton(){
-    int printCount = 0;
-    while (true){
+// void printAuton(){
+//     int printCount = 0;
+//     while (true){
 
-        switch(printCount){
-            case 0:
-                printPos0();
-                break;
-            case 1:
-                printPos1();
-                break;
-            case 2:
-                printPos2();
-                break;
-        }
+//         switch(printCount){
+//             case 0:
+//                 printPos0();
+//                 break;
+//             case 1:
+//                 printPos1();
+//                 break;
+//             case 2:
+//                 printPos2();
+//                 break;
+//         }
 
-        pros::delay(150);
+//         pros::delay(150);
         
-        printCount = (printCount + 1) % 3;
-    }
-}
+//         printCount = (printCount + 1) % 3;
+//     }
+// }
 
 
 
@@ -182,7 +184,7 @@ void colorTask(){
 pros::Task lift_task(liftTask, "lift task");
 pros::Task color_task(colorTask, "color task");
 
-pros::Task print_task_auton(printAuton, "auton task");
+// pros::Task print_task_auton(printAuton, "auton task");
 // pros::Task print_task_drive(printDrive, "drive task");
 
 pros::Task print_task_brain(printBrain, "brain task");

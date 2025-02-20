@@ -14,7 +14,7 @@ void moveDT(){
     Chassis.curvature(power, turn, false);
 }
 
-const double intakeVelocity = 450; 
+const double intakeVelocity = 475; 
 
 void moveIntake(){
 
@@ -26,14 +26,18 @@ void moveIntake(){
         IntakeBMotor.move_velocity(-intakeVelocity);
         IntakeFMotor.move_velocity(-200);
     }
-    else {IntakeBMotor.move_velocity(0);
+    else {
       IntakeFMotor.move_velocity(0);
-    };
+      IntakeBMotor.move_velocity(0);
+    }
 
 }
 
 void togglePneumatics(){
-    if(master.get_digital_new_press(DIGITAL_A)) ClampPiston.toggle();
+    if(master.get_digital_new_press(DIGITAL_A)) {
+        ClampAPiston.toggle();
+        ClampBPiston.toggle();
+    }
     if(master.get_digital_new_press(DIGITAL_DOWN)) DoinkerPiston.toggle();
 }
 
@@ -54,7 +58,7 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 2700;
+            liftTarget = 2400;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
@@ -162,9 +166,11 @@ void autoIntake(double intakeVelocity){
 
 void autoClamp(bool out){
     if(out){
-        ClampPiston.retract();
+        ClampAPiston.extend();
+        ClampBPiston.extend();
     } else{
-        ClampPiston.extend();
+        ClampAPiston.retract();
+        ClampBPiston.retract();
     }
 }
 
@@ -183,7 +189,7 @@ double dToT(double inches){
   double ticks = inches;
   ticks /= wheelCircumference;
   ticks *= 360;
-  return ticks * 1.1;
+  return ticks;
 }
 
 const double deg = 3;

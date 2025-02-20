@@ -24,10 +24,10 @@ void initialize() {
 
 	lift_task.suspend();
 	color_task.suspend();
-	print_task_auton.suspend();
+	// print_task_auton.suspend();
 	// print_task_drive.suspend();
 
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
+	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
 	IntakeFMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	IntakeBMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -52,7 +52,7 @@ void initialize() {
 	preAuton();
 
 	color_task.resume();
-	print_task_auton.resume();
+	// print_task_auton.resume();
 }
 
 /**
@@ -89,7 +89,6 @@ void competition_initialize() {}
 void autonomous() {
 
 	lift_task.resume();
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
 	switch (autonSelected) {
 		
 		case 0:
@@ -163,17 +162,22 @@ void opcontrol() {
 
 	lift_task.resume();
 	// print_task_drive.resume();
+	// autoClamp(false);
+    // liftTarget = 16500;
+    // delay(1000);
+    // movePID(-9.75, 1000, 0, 350);
+    // liftTarget = 0;
+    // movePID(-9.5, 800, 0, 300);
 
 	while (true) {
-		Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 		
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-			pros::delay(100);
-			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-				//lift_task.suspend();
-				autonomous();
-			}
-		}
+		// if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+		// 	pros::delay(100);
+		// 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+		// 		//lift_task.suspend();
+		// 		autonomous();
+		// 	}
+		// }
 
 		moveDT();
 		moveIntake();

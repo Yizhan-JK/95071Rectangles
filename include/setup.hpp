@@ -4,29 +4,30 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
-const int FL_PORT = -19;
-const int ML_PORT = -18;
-const int BL_PORT = -17;
-const int FR_PORT = 16;
-const int MR_PORT = 15;
-const int BR_PORT = 14;
+const int FL_PORT = -20;
+const int ML_PORT = -17;
+const int BL_PORT = -5;
+const int FR_PORT = 13;
+const int MR_PORT = 14;
+const int BR_PORT = 15;
 
-const int INTB_PORT = 9;
-const int INTF_PORT = -10;
+const int INTB_PORT = 7;
+const int INTF_PORT = -9;
 
-const int LIFT_PORT = 7;
-const int LIFTROT_PORT = 5;
+const int LIFT_PORT = 18;
+const int LIFTROT_PORT = -8;
 
-const int OPTICAL_PORT = 8;
+const int OPTICAL_PORT = 3;
 
-const char CLAMP_PORT = 'C';
-const char DOINKER_PORT = 'D';
-const char COLOR_PORT = 'B';
+const char CLAMPA_PORT = 'A';
+const char DOINKER_PORT = 'B';
+const char CLAMPB_PORT = 'C';
+const char COLOR_PORT = 'E';
 
-const int IMU_PORT = 1;
+const int IMU_PORT = 16;
 
-const int VERT_ODOM_PORT = 11;
-const int HORIZ_ODOM_PORT = -13;
+const int VERT_ODOM_PORT = 1;
+const int HORIZ_ODOM_PORT = -2;
 
 
 /*measurementss*/
@@ -57,7 +58,8 @@ pros::Rotation LiftRotation(LIFTROT_PORT);
 
 pros::Optical OpticalSensor(OPTICAL_PORT);
 
-pros::adi::Pneumatics ClampPiston(CLAMP_PORT, true);
+pros::adi::Pneumatics ClampAPiston(CLAMPA_PORT, false);
+pros::adi::Pneumatics ClampBPiston(CLAMPB_PORT, false);
 pros::adi::Pneumatics DoinkerPiston(DOINKER_PORT, false);
 pros::adi::Pneumatics colorPiston(COLOR_PORT, false);
 

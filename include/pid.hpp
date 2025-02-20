@@ -12,46 +12,9 @@ int sign (double in){
 
 double exitMEOW = 0.2;
 
-
-// void turnPID(double targetDegrees, int sec){
-//     double start = pros::millis();
-//     double Kp = 0.527, Ki = 0, Kd = 0;
-//     double error = targetDegrees - Imu.get_heading();
-//     double integral = 0;
-//     double lastError = error;
-//     double initialHeading = Imu.get_heading();
-
-//     while (fabs(error) > 1.7) {
-//         error = static_cast<int>(targetDegrees - Imu.get_heading() + 360) % 360;
-//         if(error >= 180){
-//             error -=  360;
-//         }
-//         integral += error;
-//         if(error == 0){
-//             integral = 0;
-//         }
-//         if(integral > 300) integral = 300;
-//         if(integral < -300) integral = -300;
-        
-//         LeftDT.move_velocity((error*Kp + integral*Ki + (lastError-error)*Kd) * 5);
-//         RightDT.move_velocity(-(error*Kp + integral*Ki + (lastError-error)*Kd) * 5);
-
-//         lastError = error;
-//         if((pros::millis() - start) > sec){
-//             break;
-//         }
-//         pros::delay(10);
-//     }
-
-//     LeftDT.move_velocity(0);
-//     RightDT.move_velocity(0);
-//     LeftDT.brake();
-//     RightDT.brake();
-// }
-
 void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
-    double Kp = 0.46, Ki = 0.0002, Kd = 1.345;
+    double Kp = 0.43, Ki = 0.0001, Kd = 1.4; 
     double error = targetDegrees - Imu.get_heading();
     double integral = 0;
     double lastError = error;
@@ -92,37 +55,95 @@ void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     RightDT.brake();
 }
 
+// void movePID(double distance, int timeout, int minRPM = 100, int maxRPM = 600) {
+//     double startTime = pros::millis();
+
+//     double kP = 0.5;     
+//     double kI = 0.0001; 
+//     double kD = 0.4;   
+
+//     LeftDT.tare_position_all();
+//     RightDT.tare_position_all();
+
+//     int prevError = 0;
+//     double integral = 0;
+//     double derivative = 0;
+
+//     int targetTicks = dToT(distance) / 1.2;
+
+//     double exitThreshold = 1.5; 
+
+//     double prevOutput = 0;
+//     double accelLimit = 15; 
+
+//     while (true) {
+//         if ((pros::millis() - startTime) > timeout) break;
+
+//         double avgLeft = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2)) / 3;
+//         double avgRight = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2)) / 3;
+//         double currentPos = (avgLeft + avgRight) / 2;
+
+//         int error = targetTicks - currentPos;
+
+//         if (fabs(error) < exitThreshold) break;
+
+//         if (fabs(error) > 10) integral += error;
+//         else integral = 0;
+
+//         if (integral > 300) integral = 300;
+//         if (integral < -300) integral = -300;
+
+//         derivative = (0.7 * derivative) + (0.3 * (error - prevError));
+
+//         double output = (error * kP) + (integral * kI) + (derivative * kD);
+
+//         if (fabs(output - prevOutput) > accelLimit) {
+//             output = prevOutput + ((output > prevOutput) ? accelLimit : -accelLimit);
+//         }
+//         prevOutput = output;
+//         if (fabs(error) > 10 && fabs(output) < minRPM) {
+//             output = (output > 0) ? minRPM : -minRPM;
+//         }
+
+//         if (fabs(output) > maxRPM) output = (output > 0) ? maxRPM : -maxRPM;
+
+//         LeftDT.move_velocity(output);
+//         RightDT.move_velocity(output);
+
+//         prevError = error;
+
+//         pros::delay(5);
+//     }
+
+//     LeftDT.move_velocity(0);
+//     RightDT.move_velocity(0);
+// }
+
 void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
+    Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     double start = pros::millis();
     double kP, kI, kD;
-    //sos
-    if(distance < 0){
-        kP = 0.91;
-        kI = 0.0001;
-        kD = 0;
-    } else{
-        kP = 0.9;
-        kI = 0.0001;
-        kD = 0;
-    }
-    
+    // if(distance < 0){
+    //     kP = 0.91;
+    //     kI = 0.0001;
+    //     kD = 0;
+    // } else{
+    kP = 1.5;
+    kI = 0.01;
+    kD = 3;
+    // }
     
     LeftDT.tare_position_all();
     RightDT.tare_position_all();
-    
-    // LeftDT.set_zero_position_all(0);
-    // RightDT.set_zero_position_all(0);
 
     int prevError = 0;
-    int derivative;
+    int derivative = 0 ;
     double integral = 0;
-    double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2)) * 100;
-    double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2)) *100;
-    // double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
-    // double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
+    double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
+    double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
     double totalAvgPos = (avgLeftSide + avgRightSide)/2;
 
-    int tVal = dToT(distance);
+    int tVal = dToT(distance)/1.75;
 
     int error = tVal - totalAvgPos;
     while(fabs(error) > 1.7){
@@ -137,84 +158,30 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
 
         std::uint32_t now = pros::millis();
 
-        avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))*100;
-        avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))*100;
+        avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
+        avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
         totalAvgPos = (avgLeftSide + avgRightSide)/2;
 
         error = tVal - totalAvgPos;
         derivative = error - prevError;
         double out = (error * kP + derivative * kD + integral * kI);
-        
-        // LeftDT.move_velocity(motorPower);
-        // RightDT.move_velocity(motorPower);
-
-        // double out = (error*Kp + integral*Ki + (lastError-error)*Kd) *5;
 
         if (fabs(out) > maxRPM) out = sign(out) * maxRPM;
         if (fabs(out) < minRPM) out = sign(out) * minRPM;
         
-        if (fabs(out) < exitMEOW) out = 0;
+        // if (fabs(out) < exitMEOW) out = 0;
 
-        LeftDT.move_velocity(out);
-        RightDT.move_velocity(out);
+        LeftDT.move_voltage(out * 20);
+        RightDT.move_voltage(out * 20);
 
 
         prevError = error;
         pros::delay(10);
     }
+
     LeftDT.move_velocity(0);
     RightDT.move_velocity(0);
-    // LeftDT.brake();
-    // RightDT.brake();
 }
-
-// void movePID(double distance, int sec){
-//     double start = pros::millis();
-//     double kP = 1.28, kI = 0.0001, kD = 0.2;
-//     // double kP = 0.93, kI = 0, kD = 0;
-    
-//     LeftDT.tare_position();
-//     RightDT.tare_position();
-
-//     int prevError = 0;
-//     int derivative;
-//     double integral = 0;
-//     double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
-//     double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
-//     double totalAvgPos = (avgLeftSide + avgRightSide)/2;
-
-//     int tVal = dToT(distance);
-
-//     int error = tVal - totalAvgPos;
-//     while(fabs(error) > 1.7){
-//         if((pros::millis() - start) > sec) break;
-//         integral += error;
-
-//         if(error == 0){
-//             integral = 0;
-//         }
-//         if(integral > 300) integral = 300;
-//         if(integral < -300) integral = -300;
-
-//         avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
-//         avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
-//         totalAvgPos = (avgLeftSide + avgRightSide)/2;
-
-//         error = tVal - totalAvgPos;
-//         derivative = error - prevError;
-//         double motorPower = (error * kP + derivative * kD + integral * kI);
-        
-//         LeftDT.move_velocity(motorPower);
-//         RightDT.move_velocity(motorPower);
-
-//         prevError = error;
-//         pros::delay(10);
-//     }
-//     LeftDT.move_velocity(0);
-//     RightDT.move_velocity(0);
-//     LeftDT.brake();
-//     RightDT.brake();
-// }
 
 // // void ignorethisplease(double distance, int sec){
 // //     double start = pros::millis();
