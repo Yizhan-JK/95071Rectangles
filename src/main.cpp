@@ -1,16 +1,11 @@
+
 #include "main.h"
 
 #include "functions.hpp"
 #include "tasks.hpp"
 #include "autonomous.hpp"
-#include "chassis_setup.hpp"
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
+
 void on_center_button() {}
 
 /**
@@ -22,12 +17,13 @@ void on_center_button() {}
 void initialize() {
 	master.clear();
 
+	odom_task.suspend();
+	auton_drive_task.suspend();
 	lift_task.suspend();
 	color_task.suspend();
-	print_task_auton.suspend();
-	// print_task_drive.suspend();
+	print_task_lcd.suspend();
 
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
+	calibrate();
 
 	IntakeFMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	IntakeBMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -37,22 +33,20 @@ void initialize() {
 
 	OpticalSensor.set_led_pwm(100);
 
-	colorPiston.extend();
+	ColorPiston.extend();
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "=^owo^=");
 
-	master.clear();
-
-	Chassis.calibrate();
-	Chassis.setPose(0, 0, 0);
-
 	autonSelect();
+
+	odom_task.resume();
+	auton_drive_task.resume();
 
 	preAuton();
 
-	color_task.resume();
-	print_task_auton.resume();
+	odom_task.suspend();
+	auton_drive_task.suspend();
 }
 
 /**
@@ -88,8 +82,11 @@ void competition_initialize() {}
 
 void autonomous() {
 
+	odom_task.resume();
+	auton_drive_task.resume();
 	lift_task.resume();
-	Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
+	print_task_lcd.resume();
+
 	switch (autonSelected) {
 		
 		case 0:
@@ -142,6 +139,11 @@ void autonomous() {
 		autonSkills();
 		break; 
 	}
+
+	odom_task.suspend();
+	auton_drive_task.suspend();
+	lift_task.suspend();
+	print_task_lcd.suspend();
 }
 
 /**
@@ -159,19 +161,20 @@ void autonomous() {
  */
 
 void opcontrol() {
-	//print_task_auton.suspend();
 
+	odom_task.resume();
+	color_task.resume();
 	lift_task.resume();
-	// print_task_drive.resume();
+	print_task_lcd.resume();
 
 	while (true) {
-		Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 		
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-			pros::delay(100);
+			pros::delay(300);
 			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-				//lift_task.suspend();
+				auton_drive_task.resume();
 				autonomous();
+				auton_drive_task.suspend();
 			}
 		}
 

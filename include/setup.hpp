@@ -2,7 +2,10 @@
 #define SETUP_HPP
 
 #include "main.h"
-#include "lemlib/api.hpp"
+
+#include <math.h>
+
+#define DEG_RAD M_PI/180
 
 const int FL_PORT = -19;
 const int ML_PORT = -18;
@@ -39,6 +42,10 @@ const float VERT_ODOM_OFFSET = -1.7800;
 
 /**************/
 
+const float DT_WHEEL_CIRCUMFERENCE = 3.25 * M_PI;
+const float TRACKING_WHEEL_CIRCUMFERENCE = 2 * M_PI;
+
+const float DT_RPM = 450;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
@@ -46,46 +53,25 @@ pros::MotorGroup LeftDT({FL_PORT, ML_PORT, BL_PORT}, pros::v5::MotorGears::blue)
 pros::MotorGroup RightDT({FR_PORT, MR_PORT, BR_PORT}, pros::v5::MotorGears::blue);
 
 pros::Motor IntakeFMotor(INTF_PORT, pros::v5::MotorGears::green);
-
 pros::Motor IntakeBMotor(INTB_PORT, pros::v5::MotorGears::blue);
 
 int liftTarget;
 
 pros::Motor LiftMotor(LIFT_PORT, pros::v5::MotorGears::green);  
-
 pros::Rotation LiftRotation(LIFTROT_PORT);
 
 pros::Optical OpticalSensor(OPTICAL_PORT);
 
 pros::adi::Pneumatics ClampPiston(CLAMP_PORT, true);
 pros::adi::Pneumatics DoinkerPiston(DOINKER_PORT, false);
-pros::adi::Pneumatics colorPiston(COLOR_PORT, false);
-
-/*
-
-LEMLIB
-
-*/
+pros::adi::Pneumatics ColorPiston(COLOR_PORT, false);
 
 pros::Imu Imu(IMU_PORT);
 pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
 pros::Rotation VerticalRotation(VERT_ODOM_PORT);
 
-const float DT_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
-const float TRACKING_WHEEL_DIAMETER = 2/*lemlib::Omniwheel::NEW_2*/;
-
-const float DT_RPM = 450;
-const float DT_DRIFT = 2;
-
-// lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
-// lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
-
-//tracking gear ratio = 1
-lemlib::TrackingWheel HorizontalTracking(&HorizontalRotation, TRACKING_WHEEL_DIAMETER, HORIZ_ODOM_OFFSET, 1);
-lemlib::TrackingWheel VerticalTracking(&VerticalRotation, TRACKING_WHEEL_DIAMETER, VERT_ODOM_OFFSET, 1);
-
-lemlib::Drivetrain Drivetrain(&LeftDT, &RightDT, TRACK_WIDTH, DT_WHEEL_DIAMETER, DT_RPM, DT_DRIFT);
-
-lemlib::OdomSensors DTsensors(&VerticalTracking, nullptr, &HorizontalTracking, nullptr, &Imu);
+int sign (double in){
+    return (in > 0) - (in < 0);
+}
 
 #endif

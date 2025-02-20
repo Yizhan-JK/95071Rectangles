@@ -3,11 +3,7 @@
 
 #include "setup.hpp"
 #include "functions.hpp"
-
-#include <math.h>
-
-#define RAD_DEG 180/M_PI
-#define CIRCUMFERENCE 2 * 2.125 * M_PI
+#include "odometry.hpp"
 
 void liftTask(){
 
@@ -26,113 +22,79 @@ void liftTask(){
 
         pros::delay(10);
     }
-    
-    // while (true){
-    //     if (liftAuto){
-    //     int position = LiftRotation.get_position();
-
-    //     if ((liftTarget - position) > 250)
-    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/25 + 12)), 200), -200));
-
-    //     else if ((liftTarget - position) < -250)
-    //         LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/12 + 60), 200), -200));
-
-    //     else LiftMotor.move_velocity(0);
-    //     }
-
-    //     pros::delay(10);
-    // }
 }
 
 int tempMax = 0;
 std::vector<std::string> motorNames{"FL", "ML", "BL", "FR", "MR", "BR", "INT", "LFT"}; 
 
 void printTemp(){
-        std::vector<double> motorTemps{};
+    std::vector<double> motorTemps{};
 
-        motorTemps.push_back(LeftDT.get_temperature(0));
-        motorTemps.push_back(LeftDT.get_temperature(1));
-        motorTemps.push_back(LeftDT.get_temperature(2));
-        motorTemps.push_back(RightDT.get_temperature(0));
-        motorTemps.push_back(RightDT.get_temperature(1));
-        motorTemps.push_back(RightDT.get_temperature(2));
-        motorTemps.push_back(IntakeFMotor.get_temperature());
-        motorTemps.push_back(LiftMotor.get_temperature());
+    motorTemps.push_back(LeftDT.get_temperature(0));
+    motorTemps.push_back(LeftDT.get_temperature(1));
+    motorTemps.push_back(LeftDT.get_temperature(2));
+    motorTemps.push_back(RightDT.get_temperature(0));
+    motorTemps.push_back(RightDT.get_temperature(1));
+    motorTemps.push_back(RightDT.get_temperature(2));
+    motorTemps.push_back(IntakeFMotor.get_temperature());
+    motorTemps.push_back(LiftMotor.get_temperature());
 
-        for(int i = 0; i < motorTemps.size(); i++)
-            if(motorTemps[i] > motorTemps[tempMax]) tempMax = i;
+    for(int i = 0; i < motorTemps.size(); i++)
+        if(motorTemps[i] > motorTemps[tempMax]) tempMax = i;
 
-        master.clear_line(0);
-
-        std::string s = motorNames[tempMax];
-        master.print(0, 0, "max temp: %.1f, %s", motorTemps[tempMax], motorNames[tempMax]);
-
-}
-
-void printPos0(){
     master.clear_line(0);
-    master.print(0, 0, "X: %f", Chassis.getPose().x);
+
+    master.print(0, 0, "max temp: %.1f, %s", motorTemps[tempMax], motorNames[tempMax]);
 }
 
-void printPos1(){
+// void printPos(){
+//     master.clear_line(0);
+//     master.print(0, 0, "x: %.2f, y: %.2f", xPos, yPos);
+// }
+
+// void printHeading(){
+//     master.clear_line(1);
+//     master.print(1, 0, "h: %.2f", heading);
+// }
+
+void printColor(){
     master.clear_line(1);
-    master.print(1, 0, "Y: %f", Chassis.getPose().y);
-}
-
-void printPos2(){
-    master.clear_line(2);
-    master.print(2, 0, "a: %f", Chassis.getPose().theta);
-}
-
-void printBrain(){
-    while(true){
-    pros::lcd::print(0, "X: %f", Chassis.getPose().x);
-    pros::lcd::print(1, "Y: %f", Chassis.getPose().y);
-    pros::lcd::print(2, "a: %f", Chassis.getPose().theta);
-
-    pros::delay(100);
-    }
+    master.print(1, 0, "color: %s, %s", colorSense ? "y" : "n", colorMode == 1 ? "r" : "b");
 }
 
 void printLift(){
     master.clear_line(2);
-    master.print(2, 0, "lift auto: %s", liftAuto ? "on" : "off");
+    master.print(2, 0, "lift: %s", liftAuto ? "y" : "n");
 }
 
-void printColor(){
-    master.clear_line(1);
-    master.print(1, 0, "color sense: %s, %s", colorSense ? "on" : "off", colorMode == 1 ? "red" : "blue");
-}
+// void printAutonTask(){
+//     int printCount = 0;
 
-
-
-void printAuton(){
-    int printCount = 0;
-    while (true){
-
-        switch(printCount){
-            case 0:
-                printPos0();
-                break;
-            case 1:
-                printPos1();
-                break;
-            case 2:
-                printPos2();
-                break;
-        }
-
-        pros::delay(150);
-        
-        printCount = (printCount + 1) % 3;
-    }
-}
-
-
-
-// void printDrive(){
-//     int printCountDrive = 0;
 //     while (true){
+
+//         switch(printCount){
+//             case 0:
+//                 printPos0();
+//                 break;
+//             case 1:
+//                 printPos1();
+//                 break;
+//             case 2:
+//                 printPos2();
+//                 break;
+//         }
+
+//         pros::delay(150);
+        
+//         printCount = (printCount + 1) % 3;
+//     }
+// }
+
+// void printDriveTask(){
+//     int printCountDrive = 0;
+
+//     while (true){
+
 //         switch (printCountDrive){
 //             case 0:
 //                 printTemp();
@@ -152,6 +114,16 @@ void printAuton(){
 //     }
 // }
 
+void printLcdTask(){
+    while(true){
+    pros::lcd::print(0, "x: %f", xPos);
+    pros::lcd::print(1, "y: %f", yPos);
+    pros::lcd::print(2, "h: %f", heading);
+
+    pros::delay(100);
+    }
+}
+
 void colorTask(){
     while (true) {
         if (colorSense){
@@ -160,31 +132,34 @@ void colorTask(){
             
             if (colorMode == 1 && (proximity > 250 && hue > 185)){
                 pros::delay(125);
-                colorPiston.retract(); //reverse
+                ColorPiston.retract(); //reverse
                 pros::delay(800);
 
             }else if (colorMode == 1){
-                colorPiston.extend();
+                ColorPiston.extend();
 
             }else if (colorMode == 2 && (proximity > 250 && hue < 14)){
                 pros::delay(125);
-                colorPiston.retract(); 
+                ColorPiston.retract(); 
                 pros::delay(800);
 
             }else if (colorMode == 2){
-                colorPiston.extend();
+                ColorPiston.extend();
             }
         }
         pros::delay(10);
     }
 }
 
+pros::Task odom_task(odometryTask, "odom task");
+pros::Task auton_drive_task(autonDriveTask, "auton drive task");
+
 pros::Task lift_task(liftTask, "lift task");
 pros::Task color_task(colorTask, "color task");
 
-pros::Task print_task_auton(printAuton, "auton task");
-// pros::Task print_task_drive(printDrive, "drive task");
+// pros::Task print_task_auton(printAutonTask, "auton print task");
+// pros::Task print_task_drive(printDriveTask, "drive print task");
 
-pros::Task print_task_brain(printBrain, "brain task");
+pros::Task print_task_lcd(printLcdTask, "lcd print task");
 
 #endif
