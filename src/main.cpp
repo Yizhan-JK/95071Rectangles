@@ -23,6 +23,7 @@ void initialize() {
 	color_task.suspend();
 	print_task_lcd.suspend();
 	// print_task_auton.suspend();
+	// print_task_drive.suspend();
 
 	calibrate();
 	
@@ -48,7 +49,6 @@ void initialize() {
 
 	odom_task.suspend();
 	auton_drive_task.suspend();
-	// print_task_auton.resume();
 }
 
 /**
@@ -88,6 +88,7 @@ void autonomous() {
 	auton_drive_task.resume();
 	lift_task.resume();
 	print_task_lcd.resume();
+	// print_task_auton.resume();
 
 	switch (autonSelected) {
 		
@@ -146,6 +147,7 @@ void autonomous() {
 	auton_drive_task.suspend();
 	lift_task.suspend();
 	print_task_lcd.suspend();
+	// print_task_auton.suspend();
 }
 
 /**
@@ -168,15 +170,14 @@ void opcontrol() {
 	color_task.resume();
 	lift_task.resume();
 	print_task_lcd.resume();
+	// print_task_drive.resume();
 
 	while (true) {
 
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
 			pros::delay(300);
 			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-				auton_drive_task.resume();
 				autonomous();
-				auton_drive_task.suspend();
 			}
 		}
 
