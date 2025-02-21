@@ -25,6 +25,8 @@ double vertOdomLast = 0;
 bool resetPos = false;
 double resetX = 0, resetY = 0, resetH = 0;
 
+double headingNotIMU = 0;
+
 //alliance's left corner as (0, 0), heading = 0 if looking away from the wall
 
 void calibrate(){
@@ -109,6 +111,7 @@ void odometryTask() {
 
         xPos += dx;
         yPos += dy;
+        headingNotIMU += theta;
 
         pros::delay(10);
 	}

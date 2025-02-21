@@ -120,6 +120,7 @@ void printLcdTask(){
     pros::lcd::print(2, "h: %f", heading);
     // pros::lcd::print(3, "vert: %f", VerticalRotation.get_position());
     // pros::lcd::print(4, "horiz: %f", HorizontalRotation.get_position());
+    pros::lcd::print(3, "headingNotIMU: %f", headingNotIMU);
 
     pros::delay(100);
     }
