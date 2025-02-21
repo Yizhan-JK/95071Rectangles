@@ -25,7 +25,7 @@ double vertOdomLast = 0;
 bool resetPos = false;
 double resetX = 0, resetY = 0, resetH = 0;
 
-//alliance's left corner as (0, 0), heading = 0 if looking towards the right wall
+//alliance's left corner as (0, 0), heading = 0 if looking away from the wall
 
 void calibrate(){
     xPos = 0, yPos = 0, heading = 0;
@@ -39,8 +39,6 @@ void calibrate(){
     vertOdomLast = 0;
 
     Imu.reset();
-
-    master.rumble("-");
 }
 
 void setPos(double x = xPos, double y = yPos, double h = heading) {
@@ -71,26 +69,27 @@ void odometryTask() {
 
         double dHeadingRad = headingRad - headingRadLast;
 
-        // dHeadingRad = fmod(headingRad - headingRadLast + 2 * M_PI, 2 * M_PI);
-        // if (dHeadingRad > M_PI) dHeadingRad -= 2 * M_PI; // (-pi, pi]
-
         double dHorizOdom = horizOdom - horizOdomLast;
         double dVertOdom = vertOdom - vertOdomLast;
+
+        headingRadLast = headingRad;
+        horizOdomLast = horizOdom;
+        vertOdomLast = vertOdom;
 
 		double localTheta, localX, localY;
 
         double radius;
         double theta;
 
-		if (fabs(dHeadingRad) < 0.000001) { 
+		if (fabs(dHeadingRad) < 0.00001) { 
 			localX = dHorizOdom;
 			localY = dVertOdom;
 		} else {
-			localX = (2*sin(dHorizOdom/2)) * (dHorizOdom/dHeadingRad - HORIZ_ODOM_OFFSET); 
-			localY = (2*sin(dVertOdom/2)) * (dVertOdom/dHeadingRad - VERT_ODOM_OFFSET);
+			localX = 2 * sin(dHeadingRad/2) * (dHorizOdom/dHeadingRad - HORIZ_ODOM_OFFSET); 
+			localY = 2 * sin(dHeadingRad/2) * (dVertOdom/dHeadingRad - VERT_ODOM_OFFSET);
 		}
 
-		if (localX < 0.000001 && localY < 0.000001){
+		if (localX < 0.00001 && localY == 0.00001){
 			radius = 0;
 			localTheta = 0;
 		} else {
@@ -105,10 +104,6 @@ void odometryTask() {
 
         xPos += dx;
         yPos += dy;
-
-        headingRadLast = headingRad;
-        horizOdomLast = horizOdom;
-        vertOdomLast = vertOdom;
 
         pros::delay(10);
 	}
@@ -193,15 +188,11 @@ void autonDriveTask() {
         double leftVelocity = power - turn;
         double rightVelocity = power + turn;
 
-        if (fabs(leftVelocity) > 600 || fabs(rightVelocity) > 600){
-            if (fabs(leftVelocity) > fabs(rightVelocity)){
+        double maxVelocity = fmax(fabs(leftVelocity), fabs(rightVelocity));
 
-                leftVelocity *= 600/fabs(leftVelocity);
-                rightVelocity *= 600/fabs(leftVelocity);
-            } else {
-                leftVelocity *= 600/fabs(rightVelocity);
-                rightVelocity *= 600/fabs(rightVelocity);
-            }
+        if (maxVelocity > 600){
+            leftVelocity *= 600 / fabs(maxVelocity);
+            rightVelocity *= 600 / fabs(maxVelocity);
         }
 
         LeftDT.move_voltage(leftVelocity * 20); // max: 600 rpm, 12000 mV
@@ -222,6 +213,7 @@ void untilTargetPos(double tolerance, double tX = targetX, double tY = targetY, 
     double distance = hypot(tX, tY);
 
     while (distance > tolerance && (pros::millis() - start) < sec){
+        distance = hypot(tX - xPos, tY - yPos);
         pros::delay(10);
     }
 }

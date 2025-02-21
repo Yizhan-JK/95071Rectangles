@@ -22,8 +22,16 @@ void initialize() {
 	lift_task.suspend();
 	color_task.suspend();
 	print_task_lcd.suspend();
+	// print_task_auton.suspend();
+
+	HorizontalRotation.set_position(0);
+	VerticalRotation.set_position(0);
 
 	calibrate();
+	master.rumble("--");
+	
+	pros::lcd::initialize();
+	pros::lcd::set_text(1, "=^owo^=");
 
 	IntakeFMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	IntakeBMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -35,9 +43,6 @@ void initialize() {
 
 	ColorPiston.extend();
 
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "=^owo^=");
-
 	autonSelect();
 
 	odom_task.resume();
@@ -47,6 +52,7 @@ void initialize() {
 
 	odom_task.suspend();
 	auton_drive_task.suspend();
+	// print_task_auton.resume();
 }
 
 /**
@@ -168,7 +174,7 @@ void opcontrol() {
 	print_task_lcd.resume();
 
 	while (true) {
-		
+
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
 			pros::delay(300);
 			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){

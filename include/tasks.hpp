@@ -7,8 +7,8 @@
 
 void liftTask(){
 
-      while (true){
-        if (liftAuto){
+    while (true){
+    if (liftAuto){
         int position = LiftRotation.get_position();
 
         if ((liftTarget - position) > 200)
@@ -18,8 +18,7 @@ void liftTask(){
             LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/10)), 200), -200));
 
         else LiftMotor.move_velocity(0);
-        }
-
+    }
         pros::delay(10);
     }
 }
@@ -47,15 +46,15 @@ void printTemp(){
     master.print(0, 0, "max temp: %.1f, %s", motorTemps[tempMax], motorNames[tempMax]);
 }
 
-// void printPos(){
-//     master.clear_line(0);
-//     master.print(0, 0, "x: %.2f, y: %.2f", xPos, yPos);
-// }
+void printPos(){
+    master.clear_line(0);
+    master.print(0, 0, "x: %.2f, y: %.2f", xPos, yPos);
+}
 
-// void printHeading(){
-//     master.clear_line(1);
-//     master.print(1, 0, "h: %.2f", heading);
-// }
+void printHeading(){
+    master.clear_line(1);
+    master.print(1, 0, "h: %.2f", heading);
+}
 
 void printColor(){
     master.clear_line(1);
@@ -74,13 +73,13 @@ void printLift(){
 
 //         switch(printCount){
 //             case 0:
-//                 printPos0();
+//                 printPos();
 //                 break;
 //             case 1:
-//                 printPos1();
+//                 printHeading();
 //                 break;
 //             case 2:
-//                 printPos2();
+//                 printTemp();
 //                 break;
 //         }
 
@@ -119,6 +118,8 @@ void printLcdTask(){
     pros::lcd::print(0, "x: %f", xPos);
     pros::lcd::print(1, "y: %f", yPos);
     pros::lcd::print(2, "h: %f", heading);
+    // pros::lcd::print(3, "vert: %f", VerticalRotation.get_position());
+    // pros::lcd::print(4, "horiz: %f", HorizontalRotation.get_position());
 
     pros::delay(100);
     }
