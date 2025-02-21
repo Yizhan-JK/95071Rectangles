@@ -24,11 +24,7 @@ void initialize() {
 	print_task_lcd.suspend();
 	// print_task_auton.suspend();
 
-	HorizontalRotation.set_position(0);
-	VerticalRotation.set_position(0);
-
 	calibrate();
-	master.rumble("--");
 	
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "=^owo^=");

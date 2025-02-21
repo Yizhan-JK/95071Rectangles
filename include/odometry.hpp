@@ -28,6 +28,11 @@ double resetX = 0, resetY = 0, resetH = 0;
 //alliance's left corner as (0, 0), heading = 0 if looking away from the wall
 
 void calibrate(){
+    HorizontalRotation.set_position(0);
+	VerticalRotation.set_position(0);
+
+    Imu.reset();
+
     xPos = 0, yPos = 0, heading = 0;
 
     headingRad = 0;
@@ -38,7 +43,7 @@ void calibrate(){
     horizOdomLast = 0;
     vertOdomLast = 0;
 
-    Imu.reset();
+    master.rumble("--");
 }
 
 void setPos(double x = xPos, double y = yPos, double h = heading) {
