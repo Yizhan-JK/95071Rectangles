@@ -94,7 +94,7 @@ void odometryTask() {
 			localY = 2 * sin(dHeadingRad/2) * (dVertOdom/dHeadingRad - VERT_ODOM_OFFSET);
 		}
 
-		if (localX < 0.00001 && localY == 0.00001){
+		if (localX < 0.00001 && localY < 0.00001){
 			radius = 0;
 			localTheta = 0;
 		} else {
