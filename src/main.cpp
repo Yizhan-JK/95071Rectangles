@@ -37,7 +37,7 @@ void initialize() {
 
 	OpticalSensor.set_led_pwm(100);
 
-	colorPiston.extend();
+	colorPiston.retract();
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "=^owo^=");

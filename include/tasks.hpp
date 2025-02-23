@@ -3,11 +3,75 @@
 
 #include "setup.hpp"
 #include "functions.hpp"
+#include "pid.hpp"
 
 #include <math.h>
 
 #define RAD_DEG 180/M_PI
 #define CIRCUMFERENCE 2 * 2.125 * M_PI
+
+// double lkP = 1.5, lkI = 0.01, lkD = 3;
+
+// double liftError;
+// double liftLastError = 0;
+
+// double liftIntegral = 0;
+// double liftDerivative = 0;
+
+// double liftMinVelocity = 0;
+// double liftMaxVelocity = 200;
+
+// double liftIntLimit = 200;
+
+// double liftExit = 0.2;
+
+// bool liftPidReset = false;
+
+// double liftPid(double in){
+
+//     if (liftPidReset){
+//         liftIntegral = 0;
+//         liftDerivative = 0;
+//         liftLastError = 0;
+//         liftPidReset = false;
+//     }
+
+//     liftError = in;
+
+//     if (fabs(liftIntegral) < liftIntLimit) liftIntegral += liftError;
+//     else liftIntegral = sign(liftIntegral) * liftIntLimit; 
+
+//     if (fabs(liftError) < 1) liftIntegral = 0;
+
+//     liftDerivative = liftError - liftLastError;
+//     liftLastError = liftError;
+
+//     double out = lkP * liftError + lkI * liftIntegral + lkD * liftDerivative;
+
+//     if (fabs(out) > liftMaxVelocity) out = sign(out) * liftMaxVelocity;
+//     if (fabs(out) < liftMinVelocity) out = sign(out) * liftMinVelocity;
+
+//     if (fabs(out) < liftExit) out = 0;
+
+//     return out;
+// }
+
+// void liftTask(){
+
+//     while (true){
+//     if (liftAuto){
+//         int position = LiftRotation.get_position();
+
+//         if (fabs(liftTarget - position) < 250)
+//             LiftMotor.move_voltage(liftPid((liftTarget - position)/100) * 20);
+//         else{
+//             LiftMotor.move_velocity(0);
+//             liftPidReset = true;
+//         }
+//     }
+//         pros::delay(10);
+//     }
+// }
 
 void liftTask(){
 
@@ -162,19 +226,19 @@ void colorTask(){
             
             if (colorMode == 1 && (proximity > 250 && hue > 185)){
                 pros::delay(125);
-                colorPiston.retract(); //reverse
+                colorPiston.extend();
                 pros::delay(800);
 
             }else if (colorMode == 1){
-                colorPiston.extend();
+                colorPiston.retract();
 
-            }else if (colorMode == 2 && (proximity > 250 && hue < 14)){
+            }else if (colorMode == 2 && (proximity > 250 && hue < 17)){
                 pros::delay(125);
-                colorPiston.retract(); 
+                colorPiston.extend(); 
                 pros::delay(800);
 
             }else if (colorMode == 2){
-                colorPiston.extend();
+                colorPiston.retract();
             }
         }
         pros::delay(10);

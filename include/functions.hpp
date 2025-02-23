@@ -57,7 +57,7 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 2300;
+            liftTarget = 2400;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
@@ -83,7 +83,7 @@ void colorModeSwitch(){
         pros::delay(300);
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
             colorSense = !colorSense;
-            colorPiston.extend();
+            colorPiston.retract();
             master.rumble(".");
         }
     }

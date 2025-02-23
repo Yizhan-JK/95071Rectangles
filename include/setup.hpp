@@ -20,8 +20,8 @@ const int LIFTROT_PORT = -8;
 const int OPTICAL_PORT = 3;
 
 const char CLAMP_PORT = 'C';
-const char DOINKER_PORT = 'D';
-const char COLOR_PORT = 'B';
+const char DOINKER_PORT = 'B';
+const char COLOR_PORT = 'D';
 
 const int IMU_PORT = 16;
 

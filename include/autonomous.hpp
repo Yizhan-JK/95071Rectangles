@@ -83,7 +83,7 @@ void redNegative(){
     movePID(23, 2500, 100, 600);
     turnPID(97, 1000);
     //autoIntake(-475);/////
-    movePID(16, 2000, 100, 600);
+    movePID(16.5, 2000, 100, 600);
     turnPID(115, 800);
     movePID(-20, 2000, 100, 600);
     //autoIntake(475);
@@ -251,11 +251,11 @@ delay(500);
     turnPID(193, 1000);
     turnPID(193, 800);
 
-    movePID(-28.5, 4000, 300, 600);
+    movePID(-28.25, 4000, 300, 600);
     liftTarget = 2300;
     
-    turnPID(256, 1000);
-    turnPID(256, 800);
+    turnPID(254, 1000);
+    turnPID(254, 800);
     autoIntake(475);
     movePID(16, 1000, 200, 450);
     delay(1500);
@@ -285,8 +285,8 @@ delay(500);
     turnPID(135, 800);
     autoIntake(0);
     movePID(7.25, 1000, 200, 600);
-    turnPID(263, 800);
-    turnPID(263, 1000);
+    turnPID(262, 800);
+    turnPID(262, 1000);
 
     movePID(-52.5, 4000, 80, 550);
     movePID(-20, 1500, 150, 400);
@@ -310,11 +310,11 @@ delay(500);
     turnPID(165, 1000);
     turnPID(165, 800);
 
-    movePID(-32.2, 4000, 300, 600);
+    movePID(-36, 4000, 300, 600);
     liftTarget = 2300;
     
-    turnPID(104, 1000);
-    turnPID(104, 800);
+    turnPID(100, 1000);
+    turnPID(100, 800);
     autoIntake(475);
     movePID(19, 1000, 200, 450);
     delay(1500);
@@ -333,7 +333,7 @@ delay(500);
     turnPID(2, 800);
 
     autoIntake(475);
-    movePID(59, 4000, 150, 400);
+    movePID(56.5, 4000, 150, 400);
 
     turnPID(110, 800);
     movePID(9, 1000, 250, 500);
@@ -350,21 +350,21 @@ delay(500);
     turnPID(175, 800);
 
     movePID(72, 4000, 300, 600);
-    turnPID(65, 1000);
-    turnPID(65, 800);
+    turnPID(60, 1000);
+    turnPID(60, 800);
 
     movePID(-48, 3000, 300, 600);
     movePID(-12, 1500, 150, 400);
     autoClamp(true);
     delay(300);
     autoIntake(475);
-    turnPID(320, 800);
-    movePID(29, 1000, 150, 550);
+    turnPID(325, 800);
+    movePID(25, 1000, 150, 550);
     turnPID(265, 800);
     turnPID(265, 800);
-    movePID(24, 1000, 150, 550);
+    movePID(20, 1000, 150, 550);
     turnPID(175, 800);
-    movePID(38, 1000, 150, 400);
+    movePID(33, 1000, 150, 400);
     turnPID(310, 1500);
     movePID(9, 1000);
     turnPID(45, 800);
