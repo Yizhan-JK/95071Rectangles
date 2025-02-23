@@ -171,13 +171,13 @@ void opcontrol() {
 
 	while (true) {
 		
-		// if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-		// 	pros::delay(100);
-		// 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
-		// 		//lift_task.suspend();
-		// 		autonomous();
-		// 	}
-		// }
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+			pros::delay(100);
+			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+				//lift_task.suspend();
+				autonomous();
+			}
+		}
 
 		moveDT();
 		moveIntake();
