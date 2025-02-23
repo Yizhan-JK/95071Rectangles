@@ -9,10 +9,17 @@ using namespace pros;
 
 void testAuton(){
     double start = pros::millis();
-    movePID(24, 1500);
-    movePID(48, 1500);
-    movePID(6, 1500);
-    movePID(18, 1500);
+    // turnPID(90, 1000);
+    // delay(1000);
+    // turnPID(180, 1000);
+    // delay(1000);
+    // turnPID(270, 1000);
+    // delay(1000);
+    // turnPID(0, 1000);
+    movePID(24, 4000);
+    delay(1000);
+    movePID(48, 4000);
+    movePID(6, 4000);
     master.print(2, 1, "Time: %.0f", (pros::millis() - start));
 }
 
@@ -59,46 +66,44 @@ void redNegative(){
     double start = pros::millis();
     autoClamp(false);
     autoIntake(-475);
-    movePID(7.75, 1200, 0, 250);
+    movePID(7.75, 1000, 0, 250);
     liftTarget = 16500;
     delay(900);
     movePID(-6, 800, 0, 350);
     liftTarget = 0;
     delay(100);
-    turnPID(345.5, 300);
-    movePID(-24, 2000, 100, 600);
+    turnPID(346, 300);
+    movePID(-24, 2000, 250, 600);
     autoIntake(0);
-    moveBot(-12, 90);
-    delay(1000);
+    movePID(-11, 2000, 100, 400);
     autoClamp(true);
     delay(300);
-    turnPID(112, 800);
+    turnPID(110, 800);
     autoIntake(475);
-    movePID(20.5, 2500, 100, 600);
-    turnPID(96.25, 1000);
-    autoIntake(-475);/////
+    movePID(23, 2500, 100, 600);
+    turnPID(97, 1000);
+    //autoIntake(-475);/////
     movePID(16, 2000, 100, 600);
     turnPID(115, 800);
     movePID(-20, 2000, 100, 600);
-    autoIntake(475);
+    //autoIntake(475);
     turnPID(55, 800);
-    movePID(16, 1200, 100, 600);
+    movePID(14.5, 1200, 100, 600);
     delay(300);
+    /////
     
-    
-    turnPID(308, 800);
-    autoIntake(-475);
+    // turnPID(308, 800);
+    // autoIntake(-475);
 
-    movePID(37, 3000, 200, 600);
-    turnPID(280, 800);
-    movePID(37, 3000, 200, 600);
-
-
+    // movePID(37, 3000, 200, 600);
     // turnPID(280, 800);
-    // autoIntake(0);
-    // movePID(33, 2000, 50, 550);
-    // movePID(7, 2000, 50, 300);
-    // delay(2000);
+    // movePID(37, 3000, 200, 600);
+
+//////
+    turnPID(280, 800);
+    movePID(33, 2000, 50, 550);
+    movePID(7, 2000, 50, 300);
+    delay(2000);
 
 
     // movePID(37, 3000, 50, 550);
@@ -160,44 +165,45 @@ void blueNegative(){
     double start = pros::millis();
     autoClamp(false);
     autoIntake(-475);
-    movePID(7, 1000, 70, 350);
+    movePID(7, 600, 100, 450);
     liftTarget = 16500;
     delay(900);
-    movePID(-3, 800, 70, 350);
+    movePID(-6, 500, 100, 450);
     liftTarget = 0;
-    turnPID(18, 800);
-    movePID(-23, 2000, 80, 400);
+    turnPID(15.2, 800);
+    turnPID(15.2, 800);
+    movePID(-23, 1000, 150, 600);
     autoIntake(0);
     moveBot(-12, 85);
     delay(1000);
     autoClamp(true);
-    delay(350);
-    turnPID(234, 800);
-    turnPID(234, 800);
+    delay(300);
+    turnPID(238, 800);
+    turnPID(238, 800);
     autoIntake(475);
-    movePID(21.2, 2000, 100, 600);
-    turnPID(262, 1000);
-    autoIntake(-475);/////
-    movePID(15, 1200, 100, 600);
-    turnPID(240, 800);
-    movePID(-22, 1200, 100, 600);
-    autoIntake(475);
+    movePID(18, 1000, 150, 600);
+    turnPID(263, 1000);
+    //autoIntake(-475);/////
+    movePID(15, 1000, 150, 600);
+    turnPID(239.8, 800);
+    movePID(-22, 1000, 150, 600);
+    //autoIntake(475);
     turnPID(296, 800);
-    movePID(13, 1200, 100, 600);
+    movePID(12, 1000, 150, 600);
     delay(300);
     ///////
-    turnPID(38, 800);
-    autoIntake(-475);
+    // turnPID(38, 800);
+    // autoIntake(-475);
 
-    movePID(42, 3000, 200, 600);
-    turnPID(80, 800);
-    movePID(37, 3000, 200, 600);
+    // movePID(42, 3000, 200, 600);
+    // turnPID(80, 800);
+    // movePID(37, 3000, 200, 600);
 
-
-    // turnPID(70, 800);
-    // movePID(37, 2500, 70, 550);
-    // movePID(8, 2000, 0, 300);
-    // delay(2000);
+///////
+    turnPID(75, 800);
+    movePID(31.75, 2500, 70, 550);
+    movePID(8, 2000, 0, 300);
+    delay(2000);
 
 
     // movePID(42, 2000, 70, 550);
@@ -222,95 +228,292 @@ void blueAWP(){
 void autonSkills(){
     autoClamp(false);
     liftTarget = 16500;
-    delay(1000);
-    movePID(-9.75, 1000, 0, 300);
+    delay(900);
     liftTarget = 0;
-    movePID(-9.5, 800, 0, 300);
+    movePID(-13, 800, 300, 600);
+    turnPID(90, 800);
+    movePID(-17, 900, 250, 600);
+    movePID(-10, 900, 100, 300);
     autoClamp(true);
     delay(300);
     autoIntake(475);
-    turnPID(165.3, 800);
-    movePID(28, 1200);
+    turnPID(161, 800);
+    movePID(25, 1500, 250, 600);
+    turnPID(208, 800);
+    autoIntake(-500);
+    delay(80);
+    autoIntake(475);
+    movePID(49, 3000, 300, 600);
+
+delay(500);
+    
+    //////
+    turnPID(193, 1000);
+    turnPID(193, 800);
+
+    movePID(-28.5, 4000, 300, 600);
+    liftTarget = 2300;
+    
+    turnPID(256, 1000);
     turnPID(256, 800);
-    movePID(25, 1200);
-    turnPID(208, 800);
-    turnPID(208, 800);
-    movePID(28, 2000);
-    turnPID(346.5, 800);
-    turnPID(346.5, 1000);
-    movePID(44, 2000);
-    turnPID(315, 1000);
-    movePID(-18.5, 1500);
-    turnPID(356, 3000);
-    movePID(18, 1000);
-    delay(500);
-    movePID(12, 1000);
-    delay(500);
-    movePID(-8, 1000, 0, 400);
-    turnPID(115, 1000);
+    autoIntake(475);
+    movePID(16, 1000, 200, 450);
+    delay(1500);
+    autoB(-500);
+    delay(80);
+    autoB(0);
+
+    liftTarget = 15000;
+    delay(900);
+    liftTarget = 0;
+    delay(200);
+    movePID(-14, 1000, 200, 550);
+    autoIntake(-475);
+    turnBot(83.7, 110);
+    delay(950);
+    turnPID(358, 800);
+
+    autoIntake(475);
+    movePID(59, 4000, 150, 400);
+
+    turnPID(250, 800);
+    movePID(9, 1000, 250, 500);
+    turnPID(155, 800);
+    movePID(-11, 800, 200, 400);
+    autoClamp(false);
+    autoIntake(-475);
+    turnPID(135, 800);
     autoIntake(0);
+    movePID(7.25, 1000, 200, 600);
+    turnPID(263, 800);
+    turnPID(263, 1000);
+
+    movePID(-52.5, 4000, 80, 550);
+    movePID(-20, 1500, 150, 400);
+    autoClamp(true);
+    delay(300);
+    turnPID(173, 1000);
+    autoIntake(475);
+    movePID(28, 1500);
+    
+    
+    turnPID(156, 800);
+////////
+
+    autoIntake(-500);
+    delay(80);
+    autoIntake(475);
+    movePID(53, 3000, 300, 600);
+
+delay(500);
+    
+    turnPID(165, 1000);
+    turnPID(165, 800);
+
+    movePID(-32.2, 4000, 300, 600);
+    liftTarget = 2300;
+    
+    turnPID(104, 1000);
+    turnPID(104, 800);
+    autoIntake(475);
+    movePID(19, 1000, 200, 450);
+    delay(1500);
+    autoB(-500);
+    delay(80);
+    autoB(0);
+
+    liftTarget = 15000;
+    delay(900);
+    liftTarget = 0;
+    delay(200);
+    movePID(-15.5, 1000, 200, 550);
+    autoIntake(-475);
+    turnBot(-83.7, 110);
+    delay(950);
+    turnPID(2, 800);
+
+    autoIntake(475);
+    movePID(59, 4000, 150, 400);
+
+    turnPID(110, 800);
+    movePID(9, 1000, 250, 500);
+    turnPID(205, 800);
+    movePID(-11, 800, 200, 400);
+    autoClamp(false);
+    autoIntake(-475);    
+    turnPID(225, 800);
+    movePID(10, 800, 300, 600);
+    
+    //////
+
+    turnPID(175, 1000);
+    turnPID(175, 800);
+
+    movePID(72, 4000, 300, 600);
+    turnPID(65, 1000);
+    turnPID(65, 800);
+
+    movePID(-48, 3000, 300, 600);
+    movePID(-12, 1500, 150, 400);
+    autoClamp(true);
+    delay(300);
+    autoIntake(475);
+    turnPID(320, 800);
+    movePID(29, 1000, 150, 550);
+    turnPID(265, 800);
+    turnPID(265, 800);
+    movePID(24, 1000, 150, 550);
+    turnPID(175, 800);
+    movePID(38, 1000, 150, 400);
+    turnPID(310, 1500);
+    movePID(9, 1000);
+    turnPID(45, 800);
     movePID(-8, 1000);
     autoClamp(false);
-    moveBot(8, 80);
-    delay(300);
-    movePID(-5, 300);
-    turnPID(135, 800);
-    movePID(16, 1500, 0, 300);
-    turnPID(265, 800);
-    turnPID(265, 1000);
-    movePID(-50.5, 4000, 80, 550);
-    moveBot(-12, 90);
-    delay(1000);
-    autoClamp(true);
+    autoIntake(-475);
+    movePID(7.5, 1000);
+    turnPID(105, 800);
+    turnPID(105, 800);
+    movePID(25, 1500, 300, 600);
+    movePID(10, 1000, 200, 450);
+    movePID(72, 4000, 250, 600);
+    /////
 
-    turnPID(179, 1000);
-    autoIntake(550);
-    movePID(28, 1500);
-    turnPID(88.5, 2000);
-    movePID(25.5, 3000);
-    turnPID(152, 2000);
-    movePID(28, 2000);
-    turnPID(9.2, 800);
-    turnPID(9.2, 1000);
-    movePID(42, 2500);
-    turnPID(45, 1000);
-    movePID(-5, 800);
-    turnPID(45, 800);
-    movePID(-18, 3000);
-    turnPID(0, 3000);
-    movePID(18, 1000);
-    delay(500);
-    movePID(12, 1000);
-    delay(500);
-    movePID(-8, 1000, 0, 400);
-    turnPID(245, 1000);
-    autoIntake(0);
-    movePID(-13, 800);
-    autoClamp(false);
-    movePID(8, 800, 0, 300);
-    movePID(-9, 800, 0, 350);
-    turnPID(315, 2000);
-    movePID(12, 3000);
-    turnPID(352, 2000);
-    turnPID(352, 2000);
-    movePID(-82, 5000, 80, 500);
-    turnPID(61, 2000);
-    movePID(-37.5, 1500);
-    moveBot(-12, 90);
-    delay(1000);
-    // autoClamp(true);
-    delay(300);
-    turnPID(65, 800);
-    movePID(-59, 3000, 80, 550);
-    // autoClamp(false);
-    delay(500);
-    // movePID(8, 5000, 50, 300);
-    // movePID(-10, 5000, 50, 200);
-    turnPID(45, 800);
-    turnPID(45, 800);
-    movePID(10, 1000);
-    turnPID(95, 800);
-    movePID(5*24 + 5, 3000, 200, 600);
+//     movePID(66, 3000, 300, 600);
+
+// delay(550);
+//     liftTarget = 2300;
+// delay(100);
+    
+//     //////
+//     turnPID(225, 800);
+//     movePID(-10, 1000, 300, 550);
+//     autoB(0);
+//     turnPID(185, 1000);
+//     turnPID(185, 800);
+
+//     movePID(-42, 3000, 300, 600);
+    
+//     turnPID(256, 1000);
+//     turnPID(256, 800);
+//     autoB(-500);
+//     delay(80);
+//     autoB(0);
+//     movePID(20, 1000, 200, 450);
+
+//     liftTarget = 15000;
+//     delay(900);
+//     liftTarget = 2300;
+//     delay(650);
+//     autoIntake(475);
+//     delay(800);
+//     autoB(-500);
+//     delay(80);
+//     autoB(0);
+
+//     liftTarget = 15000;
+//     delay(900);
+//     liftTarget = 0;
+//     delay(200);
+//     movePID(-19, 1000, 200, 550);
+//     autoIntake(-475);
+//     turnPID(337, 1000);
+//     turnPID(337, 800);
+
+//     autoIntake(475);
+//     movePID(50, 3000, 250, 550);
+
+// delay(1500);
+
+//     turnPID(230, 800);
+//     movePID(7, 1000, 250, 500);
+//     turnPID(155, 800);
+//     movePID(-11, 800, 200, 400);
+//     autoClamp(false);
+//     autoIntake(-475);
+//     turnPID(135, 800);
+//     autoIntake(0);
+//     movePID(10, 1000, 200, 600);
+//     turnPID(265, 800);
+//     turnPID(265, 1000);
+
+// delay(1500);
+
+//     movePID(-50.5, 4000, 80, 550);
+
+// delay(1500);
+
+//     movePID(-12, 800, 150, 400);
+//     autoClamp(true);
+//     delay(300);
+//     turnPID(179, 1000);
+//     autoIntake(475);
+//     movePID(26, 1500);
+//     turnPID(152.5, 800);
+
+// delay(1500); 
+
+//     autoIntake(-500);
+//     delay(80);
+//     autoIntake(475);
+//     movePID(63, 5000, 300, 600);
+//     autoB(0);
+
+// delay(1500);
+
+//     //////
+//     movePID(-26, 5000, 300, 600);
+//     turnPID(180, 800, 0, 350);
+//     turnPID(180, 800);
+//     movePID(-24, 5000, 300, 600);
+//     liftTarget = 2300;
+//     autoB(475);
+//     turnPID(90, 800);
+//     turnPID(90, 800);
+//     autoB(-500);
+//     delay(80);
+//     autoB(0);
+//     movePID(26, 1000, 200, 450);
+
+// delay(1500);
+
+//     liftTarget = 15000;
+//     delay(900);
+//     autoIntake(475);
+//     liftTarget = 2300;
+//     delay(800);
+//     autoB(-500);
+//     delay(80);
+//     autoB(0);
+
+// delay(1500);
+
+//     liftTarget = 15000;
+//     delay(900);
+//     liftTarget = 0;
+//     delay(200);
+//     movePID(-13, 800, 200, 550);
+//     autoIntake(-475);
+//     turnPID(0, 800);
+//     turnPID(0, 800);
+
+// delay(1500);
+
+//     autoIntake(475);
+//     movePID(50, 3000, 250, 550);
+
+// delay(1500);
+
+//     turnPID(135, 800);
+//     movePID(18, 1000, 250, 500);
+//     turnPID(205, 800);
+//     movePID(-12, 800, 200, 400);
+//     autoClamp(false);
+//     turnPID(225, 800);    
+
+//     /////
+
+
 }
 
 void noAuton(){}
@@ -345,8 +548,8 @@ void preBlueNeg(){
 
 void preSkills(){
     //0.75, 1
-    turnPID(53, 800);
-    turnPID(53, 800);
+    liftTarget = 2300;
+    liftMode = 1;
 }
 
 void preAuton(){

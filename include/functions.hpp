@@ -10,7 +10,7 @@ void moveDT(){
     power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); 
 
-    // Chassis.arcade(power, turn, false, 0.5);
+    //Chassis.arcade(power, turn, false, 0.5);
     Chassis.curvature(power, turn, false);
 }
 
@@ -35,8 +35,7 @@ void moveIntake(){
 
 void togglePneumatics(){
     if(master.get_digital_new_press(DIGITAL_A)) {
-        ClampAPiston.toggle();
-        ClampBPiston.toggle();
+        ClampPiston.toggle();
     }
     if(master.get_digital_new_press(DIGITAL_DOWN)) DoinkerPiston.toggle();
 }
@@ -58,7 +57,7 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 2400;
+            liftTarget = 2300;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
@@ -164,13 +163,25 @@ void autoIntake(double intakeVelocity){
     IntakeBMotor.move_velocity(intakeVelocity);
 }
 
+void autoB(double intakeVelocity){
+    IntakeBMotor.move_velocity(intakeVelocity);
+}
+
+void autoF(double intakeVelocity){
+    if(intakeVelocity > 0){
+        IntakeFMotor.move_velocity(200);
+    } else if(intakeVelocity < 0){
+        IntakeFMotor.move_velocity(-200);
+    } else{
+        IntakeFMotor.move_velocity(0);
+    }
+}
+
 void autoClamp(bool out){
     if(out){
-        ClampAPiston.extend();
-        ClampBPiston.extend();
+        ClampPiston.extend();
     } else{
-        ClampAPiston.retract();
-        ClampBPiston.retract();
+        ClampPiston.retract();
     }
 }
 

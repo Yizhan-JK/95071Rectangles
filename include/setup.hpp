@@ -19,10 +19,9 @@ const int LIFTROT_PORT = -8;
 
 const int OPTICAL_PORT = 3;
 
-const char CLAMPA_PORT = 'A';
-const char DOINKER_PORT = 'B';
-const char CLAMPB_PORT = 'C';
-const char COLOR_PORT = 'E';
+const char CLAMP_PORT = 'C';
+const char DOINKER_PORT = 'D';
+const char COLOR_PORT = 'B';
 
 const int IMU_PORT = 16;
 
@@ -58,8 +57,7 @@ pros::Rotation LiftRotation(LIFTROT_PORT);
 
 pros::Optical OpticalSensor(OPTICAL_PORT);
 
-pros::adi::Pneumatics ClampAPiston(CLAMPA_PORT, false);
-pros::adi::Pneumatics ClampBPiston(CLAMPB_PORT, false);
+pros::adi::Pneumatics ClampPiston(CLAMP_PORT, false);
 pros::adi::Pneumatics DoinkerPiston(DOINKER_PORT, false);
 pros::adi::Pneumatics colorPiston(COLOR_PORT, false);
 
