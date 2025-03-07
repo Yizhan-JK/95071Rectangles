@@ -4,17 +4,47 @@
 #include "setup.hpp"
 #include "chassis_setup.hpp"
 
-void moveDT(){
-    double power, turn;
-    
-    power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); 
+double leftVelocity = 0;
+double rightVelocity = 0;
+double powerVelocity = 0;
+double turnVelocity = 0;
+bool holdDrive = false;
+// https://www.desmos.com/calculator/8dizsra4fi
+// double driveCurve(double input, double k1 = 1, double k2 = 1) {
+// 	if (fabs(input < 3)) return 0;
+// 	else if (fabs(input < 80)) return input/k1;
+// 	else return (pow(M_E, -k2/10) + pow(M_E, (fabs(input)-127)/5) * (1-pow(M_E, -k2/10))) * input;
+// }
 
-    //Chassis.arcade(power, turn, false, 0.5);
-    Chassis.curvature(power, turn, false);
+void moveDT(){
+    double power1 = master.get_analog(ANALOG_LEFT_Y);
+	double turn2 = master.get_analog(ANALOG_RIGHT_X) * 0.925;
+
+    if (fabs(power1) < 5) power1 = 0;
+	if (fabs(turn2) < 20) turn2 = 0;
+	
+    double p = 1;
+	double t = 7;
+	power1 = (pow(M_E, -p/10) + pow(M_E, (fabs(power1)-127)/10) * (1-pow(M_E, -p/10))) * power1;
+	// turn2 = (pow(M_E, -t/10) + pow(M_E, (fabs(turn2)-127)/10) * (1-pow(M_E, -t/10))) * turn2; 
+
+	// double turn = turn2;
+	// double power = power1;
+    
+    // double power = driveCurve(power1, 4, 7);
+	// double turn = driveCurve(turn2, 4, 7);
+
+    // leftVelocity = (1 * power1 + 0.75 * turn2) * 600 / 127;
+	// rightVelocity = (1 * power1 - 0.75 * turn2) * 600 / 127;
+
+    LeftDT.move_velocity(leftVelocity);
+	RightDT.move_velocity(rightVelocity);
+
+    // //Chassis.arcade(power, turn, false, 0.5);
+    // Chassis.curvature(power, turn, false);
 }
 
-const double intakeVelocity = 475; 
+const double intakeVelocity = 500; 
 
 void moveIntake(){
 
@@ -40,14 +70,14 @@ void togglePneumatics(){
     if(master.get_digital_new_press(DIGITAL_DOWN)) DoinkerPiston.toggle();
 }
 
-bool liftAuto = true;
+bool liftAuto = false;
 int liftMode = 0;
 
 void moveLift(){
     
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2) && liftAuto)
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) // && liftAuto
         liftMode = (liftMode + 1) % 3;
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) && liftAuto)
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) // && liftAuto
         liftMode = 1;
 
     switch(liftMode){
@@ -57,22 +87,27 @@ void moveLift(){
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case 1:
-            liftTarget = 2400;
+            liftTarget = 3700;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
         case 2:
-            liftTarget = 15000;
+            liftTarget = 16500;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             break;
     }
 }
 
 void liftManuel(){
-    if (!liftAuto){
-        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) LiftMotor.move(70);
-        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) LiftMotor.move(-70);
-        else LiftMotor.move(0);
+    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+        LiftMotor.move(100);
     }
+    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        LiftMotor.move(-100);
+    }
+    else {
+        LiftMotor.move(0);
+    }
+
 }
 
 bool colorSense = false;
@@ -89,15 +124,16 @@ void colorModeSwitch(){
     }
 }
 
-void liftModeSwitch(){
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-        pros::delay(400);
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-            liftAuto = !liftAuto;
-            master.rumble("-");
-        }
-    }
-}
+
+// void liftModeSwitch(){
+//     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+//         pros::delay(400);
+//         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)){
+//             liftAuto = !liftAuto;
+//             master.rumble("-");
+//         }
+//     }
+// }
 
 int autonSelected = 0;
 
@@ -179,9 +215,9 @@ void autoF(double intakeVelocity){
 
 void autoClamp(bool out){
     if(out){
-        ClampPiston.extend();
-    } else{
         ClampPiston.retract();
+    } else{
+        ClampPiston.extend();
     }
 }
 

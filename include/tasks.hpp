@@ -76,7 +76,7 @@
 void liftTask(){
 
     while (true){
-        if (liftAuto){
+        // if (liftAuto){
         int position = LiftRotation.get_position();
 
         if ((liftTarget - position) > 250)
@@ -86,32 +86,23 @@ void liftTask(){
             LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/20), 200), -200));
 
         else LiftMotor.move_velocity(0);
-        }
+        // }
 
         pros::delay(10);
     }
 
+    // while (true) {
+    // if ((liftTarget - LiftRotation.get_position()) < -250) LiftMotor.move_velocity(200 * (liftTarget - LiftRotation.get_position()) / 36000*2);
+    // else if ((liftTarget - LiftRotation.get_position()) > 250) LiftMotor.move_velocity(100 * (liftTarget - LiftRotation.get_position()) / 36000*2);
+    // else LiftMotor.move_velocity(0);
 
-    //   while (true){
-    //     if (liftAuto){
-    //     int position = LiftRotation.get_position();
-
-    //     if ((liftTarget - position) > 200)
-    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/30)), 200), -200));
-
-    //     else if ((liftTarget - position) < -200)
-    //         LiftMotor.move_velocity(fmax(fmin((((liftTarget - position)/10)), 200), -200));
-
-    //     else LiftMotor.move_velocity(0);
-    //     }
-
-    //     pros::delay(10);
-    // }
+	// 	pros::delay(10);
+	// }
     
 }
 
 int tempMax = 0;
-std::vector<std::string> motorNames{"FL", "ML", "BL", "FR", "MR", "BR", "INT", "LFT"}; 
+std::vector<std::string> motorNames{"FL", "ML", "BL", "FR", "MR", "BR", "INTF", "INTB", "LFT"}; 
 
 void printTemp(){
         std::vector<double> motorTemps{};
@@ -123,6 +114,7 @@ void printTemp(){
         motorTemps.push_back(RightDT.get_temperature(1));
         motorTemps.push_back(RightDT.get_temperature(2));
         motorTemps.push_back(IntakeFMotor.get_temperature());
+        motorTemps.push_back(IntakeBMotor.get_temperature());
         motorTemps.push_back(LiftMotor.get_temperature());
 
         for(int i = 0; i < motorTemps.size(); i++)
@@ -225,7 +217,7 @@ void colorTask(){
             double hue = OpticalSensor.get_hue();
             
             if (colorMode == 1 && (proximity > 250 && hue > 185)){
-                pros::delay(125);
+                pros::delay(170);
                 colorPiston.extend();
                 pros::delay(800);
 
@@ -233,7 +225,7 @@ void colorTask(){
                 colorPiston.retract();
 
             }else if (colorMode == 2 && (proximity > 250 && hue < 17)){
-                pros::delay(125);
+                pros::delay(170);
                 colorPiston.extend(); 
                 pros::delay(800);
 

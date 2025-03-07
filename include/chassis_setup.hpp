@@ -4,19 +4,23 @@
 #include "main.h"
 #include "setup.hpp"
 
-float kP = 6.5, kI = 0.00025, kD = 2;
-float smallError = 0.5, largeError = 0; //range, in inches
-float smallErrorTimeout = 400, largeErrorTimeout = 0; //milliseconds
-float windupRange = 3, slew = 20; //slew: maximum acceleration
+float kP = 13.5, kI = 0.002, kD = 15;
+float smallError = 0.2, largeError = 1.5; //range, in inches
+float smallErrorTimeout = 200, largeErrorTimeout = 800; //milliseconds
+float windupRange = 3, slew = 200; //slew: maximum acceleration
 
 lemlib::ControllerSettings LateralPID (kP, kI, kD, windupRange,
                                         smallError, smallErrorTimeout, largeError, largeErrorTimeout,
                                         slew);
 
-float rkP = 0.98, rkI = 0.0019, rkD = 0.6;
-float rsmallError = 0, rlargeError = 0; //range, in degrees
-float rsmallErrorTimeout = 300, rlargeErrorTimeout = 0; //milliseconds
-float rwindupRange = 2, rslew = 40; //slew: maximum acceleration
+
+//6, 0, 45, 3, 1
+float rkP = 5.7, rkI = 0.001, rkD = 45;
+// float rkP = 3.5, rkI = 0.001, rkD = 20;
+//float rkP = 1.383, rkI = 0.001, rkD = 5.4;
+float rsmallError = 1, rlargeError = 3; //range, in degrees
+float rsmallErrorTimeout = 200, rlargeErrorTimeout = 500; //milliseconds
+float rwindupRange = 3, rslew = 200; //slew: maximum acceleration
 
 lemlib::ControllerSettings AngularPID (rkP, rkI, rkD, rwindupRange,
                                         rsmallError, rsmallErrorTimeout, rlargeError, rlargeErrorTimeout,

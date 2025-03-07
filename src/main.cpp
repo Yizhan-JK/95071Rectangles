@@ -49,9 +49,13 @@ void initialize() {
 
 	autonSelect();
 
+	lift_task.resume();
+
 	preAuton();
 
 	color_task.resume();
+	DoinkerPiston.set_value(false);
+	ClampPiston.set_value(false);
 	// print_task_auton.resume();
 }
 
@@ -88,7 +92,7 @@ void competition_initialize() {}
 
 void autonomous() {
 
-	lift_task.resume();
+	
 	switch (autonSelected) {
 		
 		case 0:
@@ -138,6 +142,7 @@ void autonomous() {
 		case 8:
 		colorMode = 1;
 		colorSense = false;
+		liftMode = 1;
 		autonSkills();
 		break; 
 	}
@@ -185,7 +190,7 @@ void opcontrol() {
 		togglePneumatics();
 		liftManuel();
 		colorModeSwitch();
-		liftModeSwitch();
+		//liftModeSwitch();
 
 		pros::delay(10);
 	}

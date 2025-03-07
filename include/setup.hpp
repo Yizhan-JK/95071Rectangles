@@ -4,38 +4,38 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
-const int FL_PORT = -20;
-const int ML_PORT = -17;
-const int BL_PORT = -5;
-const int FR_PORT = 13;
-const int MR_PORT = 14;
-const int BR_PORT = 15;
+const int FL_PORT = -6;
+const int ML_PORT = -5;
+const int BL_PORT = -4;
+const int FR_PORT = 3;
+const int MR_PORT = 2;
+const int BR_PORT = 1;
 
-const int INTB_PORT = 7;
+const int INTB_PORT = 8;
 const int INTF_PORT = -9;
 
-const int LIFT_PORT = 18;
-const int LIFTROT_PORT = -8;
+const int LIFT_PORT = 7;
+const int LIFTROT_PORT = -11;
 
-const int OPTICAL_PORT = 3;
+const int OPTICAL_PORT = 12;
 
 const char CLAMP_PORT = 'C';
 const char DOINKER_PORT = 'B';
 const char COLOR_PORT = 'D';
 
-const int IMU_PORT = 16;
+const int IMU_PORT = 13;
 
-const int VERT_ODOM_PORT = 1;
-const int HORIZ_ODOM_PORT = -2;
+const int VERT_ODOM_PORT = 14;
+const int HORIZ_ODOM_PORT = -15;
 
 
 /*measurementss*/
 
-const float TRACK_WIDTH = 11.875;
-const float LEFT_DT_OFFSET = -5.9375;
-const float RIGHT_DT_OFFSET = 5.9375;
-const float HORIZ_ODOM_OFFSET = 3.9375;
-const float VERT_ODOM_OFFSET = -1.7800;
+const float TRACK_WIDTH = 12.1875;
+const float LEFT_DT_OFFSET = -6.09375;
+const float RIGHT_DT_OFFSET = 6.09375;
+const float HORIZ_ODOM_OFFSET = 3.98;
+const float VERT_ODOM_OFFSET = 0.73;
 
 /**************/
 
@@ -71,11 +71,11 @@ pros::Imu Imu(IMU_PORT);
 pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
 pros::Rotation VerticalRotation(VERT_ODOM_PORT);
 
-const float DT_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
-const float TRACKING_WHEEL_DIAMETER = 2/*lemlib::Omniwheel::NEW_2*/;
+const float DT_WHEEL_DIAMETER = 3.25;//lemlib::Omniwheel::NEW_325;
+const float TRACKING_WHEEL_DIAMETER = 2.00/*lemlib::Omniwheel::NEW_2*/;
 
 const float DT_RPM = 450;
-const float DT_DRIFT = 2;
+const float DT_DRIFT = 8;
 
 // lemlib::TrackingWheel LeftDTtracking(&LeftDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
 // lemlib::TrackingWheel RightDTtracking(&RightDT, DT_WHEEL_DIAMETER, LEFT_DT_OFFSET, DT_RPM);
