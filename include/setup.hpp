@@ -12,7 +12,7 @@ const int MR_PORT = 2;
 const int BR_PORT = 1;
 
 const int INTB_PORT = 8;
-const int INTF_PORT = -10;
+const int INTF_PORT = -21;
 
 const int LIFT_PORT = 7;
 const int LIFTROT_PORT = -11;
@@ -67,7 +67,7 @@ LEMLIB
 
 */
 
-pros::Imu Imu(IMU_PORT);
+pros::Imu ImuSensor(IMU_PORT);
 pros::Rotation HorizontalRotation(HORIZ_ODOM_PORT);
 pros::Rotation VerticalRotation(VERT_ODOM_PORT);
 
@@ -86,6 +86,6 @@ lemlib::TrackingWheel VerticalTracking(&VerticalRotation, TRACKING_WHEEL_DIAMETE
 
 lemlib::Drivetrain Drivetrain(&LeftDT, &RightDT, TRACK_WIDTH, DT_WHEEL_DIAMETER, DT_RPM, DT_DRIFT);
 
-lemlib::OdomSensors DTsensors(&VerticalTracking, nullptr, &HorizontalTracking, nullptr, &Imu);
+lemlib::OdomSensors DTsensors(&VerticalTracking, nullptr, &HorizontalTracking, nullptr, &ImuSensor);
 
 #endif

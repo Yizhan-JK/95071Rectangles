@@ -16,17 +16,18 @@ double exitMEOW = 0.2;
 
 void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
+    
     double Kp = 2.26, Ki = 0.00275, Kd = 1.5; 
-    double error = static_cast<int>(targetDegrees - Imu.get_heading() + 360) % 360;
+    double error = static_cast<int>(targetDegrees - ImuSensor.get_heading() + 360) % 360;
     if(error >= 180){
         error -= 360;
     }
     double integral = 0;
     double lastError = error;
-    double initialHeading = Imu.get_heading();
+    double initialHeading = ImuSensor.get_heading();
 
     while (fabs(error) > 1.7) {
-        error = static_cast<int>(targetDegrees - Imu.get_heading() + 360) % 360;
+        error = static_cast<int>(targetDegrees - ImuSensor.get_heading() + 360) % 360;
         if(error >= 180){
             error -=  360;
         }
@@ -60,12 +61,9 @@ void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     RightDT.brake();
 }
 
-//float kP = 13.5, kI = 0.002, kD = 15;
-
 void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
-    Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     double start = pros::millis();
-    double rkP = 1.5, rkI = 0.01, rkD = 3;
+    double Kp = 1.2, Ki = 0.001, Kd = 3.8;
     
     LeftDT.tare_position_all();
     RightDT.tare_position_all();
@@ -98,18 +96,13 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
 
         error = tVal - totalAvgPos;
         derivative = error - prevError;
-        double out = (error * kP + derivative * kD + integral * kI);
+        double out = (error * Kp + derivative * Kd + integral * Ki);
 
         if (fabs(out) > maxRPM) out = sign(out) * maxRPM;
         if (fabs(out) < minRPM) out = sign(out) * minRPM;
         
-        // if (fabs(out) < exitMEOW) out = 0;
-
-        // LeftDT.move_velocity(out);
-        // RightDT.move_velocity(out);
         LeftDT.move_voltage(out * 20);
         RightDT.move_voltage(out * 20);
-
 
         prevError = error;
         pros::delay(10);
@@ -121,8 +114,8 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     // Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     // double start = pros::millis();
     // // double kP, kI, kD;
-    // double kP = 1.5, kI = 0.01, kD = 3;
-    // double lkP = 1.8, lkI = 0.01, lkD = 7;
+    // double kP = 0, kI = 0, kD = 0;
+    // double lkP = 0, lkI = 0, lkD = 0;
     
     // LeftDT.tare_position_all();
     // RightDT.tare_position_all();
@@ -130,10 +123,6 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     // int prevError = 0;
     // int derivative = 0 ;
     // double integral = 0;
-
-    // // int prevErrorR = 0;
-    // // int derivativeR = 0 ;
-    // // double integralR = 0;
 
     // double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
     // double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
@@ -188,16 +177,17 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     //     prevError = error;
     //     // prevErrorR = error;
     //     pros::delay(10);
-    //}
+    // }
 
-    LeftDT.move_voltage(0);
-    RightDT.move_voltage(0);
+    // LeftDT.move_voltage(0);
+    // RightDT.move_voltage(0);
 }
+
 
 void swervePID(double targetX, double targetY, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
 
-    double kP = 1.442225, kI = 0.000075, kD = 4;
+    double Kp = 1.442225, Ki = 0.000075, Kd = 4;
 
     LeftDT.tare_position_all();
     RightDT.tare_position_all();
@@ -252,8 +242,8 @@ void swervePID(double targetX, double targetY, int sec, int minRPM = 0, int maxR
         derivativeLeft = errorLeft - prevErrorLeft;
         derivativeRight = errorRight - prevErrorRight;
 
-        double outLeft = (errorLeft * kP + derivativeLeft * kD + integralLeft * kI);
-        double outRight = (errorRight * kP + derivativeRight * kD + integralRight * kI);
+        double outLeft = (errorLeft * Kp + derivativeLeft * Kd + integralLeft * Ki);
+        double outRight = (errorRight * Kp + derivativeRight * Kd + integralRight * Ki);
 
         // if (fabs(outLeft) > maxRPM) outLeft = sign(outLeft) * maxRPM;
         // if (fabs(outLeft) < minRPM) outLeft = sign(outLeft) * minRPM;

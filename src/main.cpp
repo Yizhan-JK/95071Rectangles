@@ -35,6 +35,8 @@ void initialize() {
 	LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	LiftRotation.set_position(0);
 
+	IntakeBMotor.tare_position();
+
 	OpticalSensor.set_led_pwm(100);
 
 	colorPiston.retract();
@@ -45,6 +47,8 @@ void initialize() {
 	master.clear();
 
 	Chassis.calibrate();
+	// ImuSensor.reset();
+	delay(500);
 	Chassis.setPose(0, 0, 0);
 
 	autonSelect();
@@ -181,7 +185,11 @@ void opcontrol() {
 			pros::delay(100);
 			if (master.get_digital(DIGITAL_LEFT)){
 				//lift_task.suspend();
+				opControl = false;
+				liftAuto = true;
 				autonomous();
+				opControl = true;
+				liftAuto = false;
 			}
 		}
 

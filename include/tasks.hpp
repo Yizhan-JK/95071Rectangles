@@ -155,6 +155,9 @@ void printBrain(){
     pros::lcd::print(1, "Y: %f", Chassis.getPose().y);
     pros::lcd::print(2, "a: %f", Chassis.getPose().theta);
 
+    pros::lcd::print(4, "intake: %f", IntakeBMotor.get_position());
+    pros::lcd::print(5, "h: %f, p: %f", OpticalSensor.get_hue(), OpticalSensor.get_proximity());
+
     pros::delay(100);
     }
 }
@@ -217,32 +220,56 @@ void printColor(){
 //     }
 // }
 
+bool colorOn = false;
+
 void colorTask(){
     while (true) {
+
         if (colorSense){
-            int proximity = OpticalSensor.get_proximity();
-            double hue = OpticalSensor.get_hue();
-            
-            if (colorMode == 1 && (proximity > 250 && hue > 185)){
-                pros::delay(170);
-                colorPiston.extend();
-                pros::delay(800);
 
-            }else if (colorMode == 1){
-                colorPiston.retract();
+        int proximity = OpticalSensor.get_proximity();
+        double hue = OpticalSensor.get_hue();
+        double position;
+        double start;
+        
+        if (colorMode == 1 && (proximity > 250 && hue > 185) ||
+            (colorMode == 2 && (proximity > 250 && hue < 17))){
+            position = IntakeBMotor.get_position();
+            start = pros::millis();
+            colorOn = true;
+        }
 
-            }else if (colorMode == 2 && (proximity > 250 && hue < 17)){
-                pros::delay(170);
-                colorPiston.extend(); 
-                pros::delay(800);
+        if (colorOn && ((IntakeBMotor.get_position() - position) > 750)){
+            IntakeBMotor.move_velocity(-600);
+            pros::delay(800);
+            IntakeBMotor.move_velocity(600);
+            pros::delay(600);
+            colorOn = false;
+        } else if (colorOn && ((pros::millis()-start) > 2000)){
+            colorOn = false;
+        }
+        }
 
-            }else if (colorMode == 2){
-                colorPiston.retract();
+        if (opControl){
+
+            if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+                IntakeBMotor.move_velocity(intakeVelocity);
+                IntakeFMotor.move_velocity(200);
+            }
+            else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+                IntakeBMotor.move_velocity(-intakeVelocity);
+                IntakeFMotor.move_velocity(-200);
+            }
+            else {
+            IntakeFMotor.move_velocity(0);
+            IntakeBMotor.move_velocity(0);
             }
         }
+
+
         pros::delay(10);
     }
-}
+    }
 
 pros::Task lift_task(liftTask, "lift task");
 pros::Task color_task(colorTask, "color task");
