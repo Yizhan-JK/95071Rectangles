@@ -164,7 +164,8 @@ void autonomous() {
 
 void opcontrol() {
 	//print_task_auton.suspend();
-
+	opControl = true;
+	liftAuto = false;
 	lift_task.resume();
 	// print_task_drive.resume();
 	// autoClamp(false);
@@ -176,9 +177,9 @@ void opcontrol() {
 
 	while (true) {
 		
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+		if (master.get_digital(DIGITAL_LEFT)){
 			pros::delay(100);
-			if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+			if (master.get_digital(DIGITAL_LEFT)){
 				//lift_task.suspend();
 				autonomous();
 			}

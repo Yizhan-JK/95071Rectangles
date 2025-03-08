@@ -16,8 +16,6 @@ lemlib::ControllerSettings LateralPID (kP, kI, kD, windupRange,
 
 //6, 0, 45, 3, 1
 float rkP = 5.7, rkI = 0.001, rkD = 45;
-// float rkP = 3.5, rkI = 0.001, rkD = 20;
-//float rkP = 1.383, rkI = 0.001, rkD = 5.4;
 float rsmallError = 1, rlargeError = 3; //range, in degrees
 float rsmallErrorTimeout = 200, rlargeErrorTimeout = 500; //milliseconds
 float rwindupRange = 3, rslew = 200; //slew: maximum acceleration

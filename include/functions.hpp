@@ -26,16 +26,13 @@ void moveDT(){
     double p = 1;
 	double t = 7;
 	power1 = (pow(M_E, -p/10) + pow(M_E, (fabs(power1)-127)/10) * (1-pow(M_E, -p/10))) * power1;
-	// turn2 = (pow(M_E, -t/10) + pow(M_E, (fabs(turn2)-127)/10) * (1-pow(M_E, -t/10))) * turn2; 
+	turn2 = (pow(M_E, -t/10) + pow(M_E, (fabs(turn2)-127)/10) * (1-pow(M_E, -t/10))) * turn2; 
 
-	// double turn = turn2;
-	// double power = power1;
-    
-    // double power = driveCurve(power1, 4, 7);
-	// double turn = driveCurve(turn2, 4, 7);
+	double turn = turn2;
+	double power = power1;
 
-    // leftVelocity = (1 * power1 + 0.75 * turn2) * 600 / 127;
-	// rightVelocity = (1 * power1 - 0.75 * turn2) * 600 / 127;
+    leftVelocity = (1 * power1 + 0.75 * turn2) * 600 / 127;
+	rightVelocity = (1 * power1 - 0.75 * turn2) * 600 / 127;
 
     LeftDT.move_velocity(leftVelocity);
 	RightDT.move_velocity(rightVelocity);
@@ -72,41 +69,44 @@ void togglePneumatics(){
 
 bool liftAuto = false;
 int liftMode = 0;
+bool liftModeReset = false;
 
 void moveLift(){
     
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) // && liftAuto
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
         liftMode = (liftMode + 1) % 3;
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) // && liftAuto
+        liftModeReset = true;
+    } // && liftAuto
+        
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){ // && liftAuto
         liftMode = 1;
-
-    switch(liftMode){
+        liftModeReset = true;
+    }
+    
+    if (liftModeReset){
+        switch(liftMode){
         
         case 0:
             liftTarget = 0;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+            liftAuto = true;
             break;
         case 1:
             liftTarget = 3700;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            liftAuto = true;
             break;
         case 2:
             liftTarget = 16500;
             LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            liftAuto = true;
             break;
     }
+    liftModeReset = false;
+}
 }
 
 void liftManuel(){
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-        LiftMotor.move(100);
-    }
-    else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        LiftMotor.move(-100);
-    }
-    else {
-        LiftMotor.move(0);
-    }
 
 }
 

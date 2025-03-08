@@ -73,10 +73,12 @@
 //     }
 // }
 
+bool opControl = false;
+
 void liftTask(){
 
     while (true){
-        // if (liftAuto){
+        if (liftAuto){
         int position = LiftRotation.get_position();
 
         if ((liftTarget - position) > 250)
@@ -85,9 +87,15 @@ void liftTask(){
         else if ((liftTarget - position) < -250)
             LiftMotor.move_velocity(fmax(fmin(((liftTarget - position)/20), 200), -200));
 
-        else LiftMotor.move_velocity(0);
-        // }
+        else{
+            LiftMotor.move_velocity(0);
+            if (opControl) liftAuto = false;}
+        }else{
 
+        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) LiftMotor.move_velocity(150);
+        else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) LiftMotor.move_velocity(-150);
+        else LiftMotor.move(0);
+        }
         pros::delay(10);
     }
 
@@ -97,7 +105,6 @@ void liftTask(){
     // else LiftMotor.move_velocity(0);
 
 	// 	pros::delay(10);
-	// }
     
 }
 

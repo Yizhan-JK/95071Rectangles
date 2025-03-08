@@ -12,9 +12,11 @@ int sign (double in){
 
 double exitMEOW = 0.2;
 
+//float rkP = 5.7, rkI = 0.001, rkD = 45;
+
 void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     double start = pros::millis();
-    double Kp = 2.34, Ki = 0.00275, Kd = 1.5; 
+    double Kp = 2.26, Ki = 0.00275, Kd = 1.5; 
     double error = static_cast<int>(targetDegrees - Imu.get_heading() + 360) % 360;
     if(error >= 180){
         error -= 360;
@@ -58,69 +60,12 @@ void turnPID(double targetDegrees, int sec, int minRPM = 0, int maxRPM = 600){
     RightDT.brake();
 }
 
+//float kP = 13.5, kI = 0.002, kD = 15;
 
 void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
-    // Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    // double start = pros::millis();
-    // // double kP, kI, kD;
-    // double rkP = 1.5, rkI = 0.01, rkD = 3;
-    
-    // LeftDT.tare_position_all();
-    // RightDT.tare_position_all();
-
-    // int prevError = 0;
-    // int derivative = 0 ;
-    // double integral = 0;
-    // double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
-    // double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
-    // double totalAvgPos = (avgLeftSide + avgRightSide)/2;
-
-    // int tVal = dToT(distance)/1.75;
-
-    // int error = tVal - totalAvgPos;
-    // while(fabs(error) > 1.7){
-    //     if((pros::millis() - start) > sec) break;
-    //     integral += error;
-
-    //     if(error == 0){
-    //         integral = 0;
-    //     }
-    //     if(integral > 300) integral = 300;
-    //     if(integral < -300) integral = -300;
-
-    //     std::uint32_t now = pros::millis();
-
-    //     avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
-    //     avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
-    //     totalAvgPos = (avgLeftSide + avgRightSide)/2;
-
-    //     error = tVal - totalAvgPos;
-    //     derivative = error - prevError;
-    //     double out = (error * kP + derivative * kD + integral * kI);
-
-    //     if (fabs(out) > maxRPM) out = sign(out) * maxRPM;
-    //     if (fabs(out) < minRPM) out = sign(out) * minRPM;
-        
-    //     // if (fabs(out) < exitMEOW) out = 0;
-
-    //     // LeftDT.move_velocity(out);
-    //     // RightDT.move_velocity(out);
-    //     LeftDT.move_voltage(out * 20);
-    //     RightDT.move_voltage(out * 20);
-
-
-    //     prevError = error;
-    //     pros::delay(10);
-    // }
-
-    // LeftDT.move_velocity(0);
-    // RightDT.move_velocity(0);
-
     Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     double start = pros::millis();
-    // double kP, kI, kD;
-    double kP = 1.5, kI = 0.01, kD = 3;
-    double lkP = 1.8, lkI = 0.01, lkD = 7;
+    double rkP = 1.5, rkI = 0.01, rkD = 3;
     
     LeftDT.tare_position_all();
     RightDT.tare_position_all();
@@ -128,11 +73,6 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     int prevError = 0;
     int derivative = 0 ;
     double integral = 0;
-
-    // int prevErrorR = 0;
-    // int derivativeR = 0 ;
-    // double integralR = 0;
-
     double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
     double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
     double totalAvgPos = (avgLeftSide + avgRightSide)/2;
@@ -140,53 +80,115 @@ void movePID(double distance, int sec, int minRPM = 0, int maxRPM = 600){
     int tVal = dToT(distance)/1.75;
 
     int error = tVal - totalAvgPos;
-    // int errorR = tVal - avgRightSide;
-
     while(fabs(error) > 1.7){
         if((pros::millis() - start) > sec) break;
         integral += error;
-        // integralR += errorR;
 
-        if(error < 0.1){
+        if(error == 0){
             integral = 0;
         }
-        // if(errorR < 0.1){
-        //     integralR = 0;
-        // }
         if(integral > 300) integral = 300;
         if(integral < -300) integral = -300;
 
-        // if(integralR > 300) integralR = 300;
-        // if(integralR < -300) integralR = -300;
+        std::uint32_t now = pros::millis();
 
         avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
         avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
-        double totalAvgPos = (avgLeftSide + avgRightSide)/2;
+        totalAvgPos = (avgLeftSide + avgRightSide)/2;
 
         error = tVal - totalAvgPos;
-        // errorR = tVal - avgRightSide;
         derivative = error - prevError;
-        double outL = (error * lkP + derivative * lkD + integral * lkI);
-        double outR = (error * kP + derivative * kD + integral * kI);
+        double out = (error * kP + derivative * kD + integral * kI);
 
-        if (fabs(outR) > maxRPM) outR = sign(outR) * maxRPM;
-        if (fabs(outR) < minRPM) outR = sign(outR) * minRPM;
-
-        if (fabs(outL) > maxRPM) outL = sign(outL) * maxRPM;
-        if (fabs(outL) < minRPM) outL = sign(outL) * minRPM;
-
+        if (fabs(out) > maxRPM) out = sign(out) * maxRPM;
+        if (fabs(out) < minRPM) out = sign(out) * minRPM;
+        
         // if (fabs(out) < exitMEOW) out = 0;
 
         // LeftDT.move_velocity(out);
         // RightDT.move_velocity(out);
-        LeftDT.move_voltage(outL * 20);
-        RightDT.move_voltage(outR * 20);
+        LeftDT.move_voltage(out * 20);
+        RightDT.move_voltage(out * 20);
 
 
         prevError = error;
-        // prevErrorR = error;
         pros::delay(10);
     }
+
+    LeftDT.move_velocity(0);
+    RightDT.move_velocity(0);
+
+    // Chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // double start = pros::millis();
+    // // double kP, kI, kD;
+    // double kP = 1.5, kI = 0.01, kD = 3;
+    // double lkP = 1.8, lkI = 0.01, lkD = 7;
+    
+    // LeftDT.tare_position_all();
+    // RightDT.tare_position_all();
+
+    // int prevError = 0;
+    // int derivative = 0 ;
+    // double integral = 0;
+
+    // // int prevErrorR = 0;
+    // // int derivativeR = 0 ;
+    // // double integralR = 0;
+
+    // double avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
+    // double avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
+    // double totalAvgPos = (avgLeftSide + avgRightSide)/2;
+
+    // int tVal = dToT(distance)/1.75;
+
+    // int error = tVal - totalAvgPos;
+    // // int errorR = tVal - avgRightSide;
+
+    // while(fabs(error) > 1.7){
+    //     if((pros::millis() - start) > sec) break;
+    //     integral += error;
+    //     // integralR += errorR;
+
+    //     if(error < 0.1){
+    //         integral = 0;
+    //     }
+    //     // if(errorR < 0.1){
+    //     //     integralR = 0;
+    //     // }
+    //     if(integral > 300) integral = 300;
+    //     if(integral < -300) integral = -300;
+
+    //     // if(integralR > 300) integralR = 300;
+    //     // if(integralR < -300) integralR = -300;
+
+    //     avgLeftSide = (LeftDT.get_position(0) + LeftDT.get_position(1) + LeftDT.get_position(2))/3;
+    //     avgRightSide = (RightDT.get_position(0) + RightDT.get_position(1) + RightDT.get_position(2))/3;
+    //     double totalAvgPos = (avgLeftSide + avgRightSide)/2;
+
+    //     error = tVal - totalAvgPos;
+    //     // errorR = tVal - avgRightSide;
+    //     derivative = error - prevError;
+    //     double outL = (error * lkP + derivative * lkD + integral * lkI);
+    //     double outR = (error * kP + derivative * kD + integral * kI);
+
+    //     if (fabs(outR) > maxRPM) outR = sign(outR) * maxRPM;
+    //     if (fabs(outR) < minRPM) outR = sign(outR) * minRPM;
+
+    //     if (fabs(outL) > maxRPM) outL = sign(outL) * maxRPM;
+    //     if (fabs(outL) < minRPM) outL = sign(outL) * minRPM;
+
+    //     // if (fabs(out) < exitMEOW) out = 0;
+
+    //     // LeftDT.move_velocity(out);
+    //     // RightDT.move_velocity(out);
+    //     LeftDT.move_voltage(outL * 20);
+    //     RightDT.move_voltage(outR * 20);
+
+
+    //     prevError = error;
+    //     // prevErrorR = error;
+    //     pros::delay(10);
+    //}
 
     LeftDT.move_voltage(0);
     RightDT.move_voltage(0);

@@ -12,7 +12,7 @@ const int MR_PORT = 2;
 const int BR_PORT = 1;
 
 const int INTB_PORT = 8;
-const int INTF_PORT = -9;
+const int INTF_PORT = -10;
 
 const int LIFT_PORT = 7;
 const int LIFTROT_PORT = -11;
